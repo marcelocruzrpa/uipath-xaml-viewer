@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src/",
+    "package": "node scripts/package.js"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "archiver": "^7.0.1",
+    "eslint": "^9.39.4",
+    "jsdom": "^26.0.0",
+    "vitest": "^3.0.0"
+  }
+}

@@ -1,0 +1,28 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="FlowchartProcess"
+  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+  xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+  xmlns:ui="http://schemas.uipath.com/workflow/activities"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  DisplayName="FlowchartProcess">
+  <Flowchart DisplayName="Main Flowchart" sap2010:WorkflowViewState.IdRef="Flowchart_1">
+    <FlowStep x:Name="FlowStep_1" sap2010:WorkflowViewState.IdRef="FlowStep_1">
+      <Assign DisplayName="Initialize" sap2010:WorkflowViewState.IdRef="Assign_1">
+        <Assign.To>
+          <OutArgument x:TypeArguments="x:Int32">[value]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="x:Int32">0</InArgument>
+        </Assign.Value>
+      </Assign>
+    </FlowStep>
+    <FlowDecision x:Name="FlowDecision_1" sap2010:WorkflowViewState.IdRef="FlowDecision_1" DisplayName="Is Valid?" Condition="[value > 0]" />
+    <FlowStep x:Name="FlowStep_2" sap2010:WorkflowViewState.IdRef="FlowStep_2">
+      <ui:LogMessage DisplayName="Log Success" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="Valid" />
+    </FlowStep>
+    <FlowStep x:Name="FlowStep_3" sap2010:WorkflowViewState.IdRef="FlowStep_3">
+      <ui:LogMessage DisplayName="Log Failure" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Error" Message="Invalid" />
+    </FlowStep>
+  </Flowchart>
+</Activity>

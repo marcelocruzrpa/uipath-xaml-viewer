@@ -1,0 +1,1143 @@
+/* ═══════════════════════════════════════════════════════════════════
+   UiPath XAML Visualizer — Styles v2
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Button ────────────────────────────────────────────────────────── */
+.uxv-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  margin-right: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  color: #FA4616;
+  background: #FFF4F0;
+  border: 1px solid #FA4616;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 20px;
+  white-space: nowrap;
+}
+.uxv-btn:hover { background: #FA4616; color: #fff; }
+.uxv-btn:active { transform: scale(0.97); }
+.uxv-btn-active { background: #FA4616; color: #fff; }
+.uxv-btn-active:hover { background: #E03A0F; }
+.uxv-btn:disabled { opacity: 0.6; cursor: wait; }
+.uxv-btn-floating {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.uxv-spinner {
+  display: inline-block; width: 14px; height: 14px;
+  border: 2px solid currentColor; border-right-color: transparent;
+  border-radius: 50%; animation: uxv-spin 0.6s linear infinite;
+  margin-right: 6px; vertical-align: text-bottom;
+}
+@keyframes uxv-spin { to { transform: rotate(360deg); } }
+
+/* ── Viewer Container ──────────────────────────────────────────────── */
+#uxv-viewer-container {
+  border: 1px solid var(--borderColor-default, #d1d5da);
+  border-radius: 6px;
+  background: var(--bgColor-default, #ffffff);
+  overflow: hidden;
+  margin-top: -1px;
+  pointer-events: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.uxv-status {
+  margin: 16px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+.uxv-status strong {
+  display: block;
+  margin-bottom: 4px;
+}
+.uxv-status-error {
+  background: #FFEBEE;
+  border-color: #F2B8BD;
+  color: #8A1C28;
+}
+.uxv-status-warning {
+  background: #FFF8E1;
+  border-color: #F1D48A;
+  color: #7A5400;
+}
+.uxv-status-success {
+  background: #EAFBF1;
+  border-color: #8FD2A6;
+  color: #1A7F37;
+}
+
+/* ── Focus indicators ─────────────────────────────────────────────── */
+#uxv-viewer-container:focus-visible {
+  outline: 2px solid #FA4616;
+  outline-offset: -2px;
+}
+.uxv-tool-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -2px;
+}
+
+/* ── Header ────────────────────────────────────────────────────────── */
+.uxv-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #FA4616 0%, #FF6D3F 100%);
+  color: #fff;
+  position: relative;
+  z-index: 10;
+}
+.uxv-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  min-width: 0;
+  overflow: hidden;
+}
+.uxv-title strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.uxv-logo { font-size: 20px; opacity: 0.9; }
+.uxv-badge {
+  font-size: 10px; padding: 2px 8px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px; font-weight: 500; letter-spacing: 0.3px;
+}
+.uxv-badge-template {
+  background: #FFF8E1; color: #F57F17; border: 1px solid #F9A825;
+  font-weight: 600;
+}
+.uxv-selector-preview {
+  font-family: 'SF Mono', Consolas, monospace; font-size: 11px; line-height: 1.5;
+  padding: 8px; background: var(--bgColor-muted, #f6f8fa);
+  border: 1px solid var(--borderColor-default, #d1d5da); border-radius: 6px;
+  overflow-x: auto; white-space: pre-wrap; word-break: break-all; max-height: 200px;
+}
+
+/* ── Toolbar ───────────────────────────────────────────────────────── */
+.uxv-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.uxv-tool-btn {
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 4px;
+  background: rgba(255,255,255,0.1);
+  color: #fff; cursor: pointer;
+  font-size: 16px; font-weight: 700;
+  transition: background 0.15s;
+}
+.uxv-tool-btn:hover { background: rgba(255,255,255,0.25); }
+.uxv-tool-label { width: auto; padding: 0 8px; font-size: 11px; letter-spacing: 0.3px; }
+.uxv-export-btn {
+  width: auto;
+  padding: 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+.uxv-toolbar-sep {
+  color: rgba(255,255,255,0.3);
+  margin: 0 2px;
+  font-size: 14px;
+  user-select: none;
+}
+.uxv-zoom-label {
+  font-size: 11px; opacity: 0.8;
+  min-width: 36px; text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Search ───────────────────────────────────────────────────────── */
+.uxv-search-input {
+  height: 26px;
+  width: 160px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 4px;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  outline: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+.uxv-search-input::placeholder {
+  color: rgba(255,255,255,0.55);
+}
+.uxv-search-input:focus {
+  background: rgba(255,255,255,0.25);
+  border-color: rgba(255,255,255,0.6);
+}
+.uxv-search-count {
+  font-size: 11px;
+  opacity: 0.85;
+  min-width: 20px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.uxv-search-match > rect:first-of-type,
+.uxv-search-match > .uxv-rect {
+  stroke: #FF8C00 !important;
+  stroke-width: 3px !important;
+  filter: drop-shadow(0 0 6px rgba(255,140,0,0.7)) drop-shadow(0 0 12px rgba(255,140,0,0.4)) !important;
+}
+
+/* ── Outline View ──────────────────────────────────────────────────── */
+.uxv-outline-wrap {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--bgColor-default, #fff);
+  font-family: 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 13px;
+  padding: 8px 0;
+}
+.uxv-outline {
+  min-width: max-content;
+}
+.uxv-ol-row {
+  display: flex;
+  align-items: center;
+  padding: 3px 12px 3px 0;
+  line-height: 1.6;
+  gap: 0;
+  white-space: nowrap;
+  cursor: default;
+}
+.uxv-ol-row:hover {
+  background: var(--bgColor-muted, #f6f8fa);
+}
+.uxv-ol-num {
+  width: 36px;
+  text-align: right;
+  color: var(--fgColor-muted, #656d76);
+  font-size: 11px;
+  padding-right: 10px;
+  flex-shrink: 0;
+  user-select: none;
+}
+.uxv-ol-indent {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+.uxv-ol-pipe {
+  display: inline-block;
+  width: 20px;
+  border-left: 2px solid var(--borderColor-default, #d1d5da);
+  margin-left: 8px;
+  height: 100%;
+  min-height: 22px;
+}
+.uxv-ol-tag {
+  display: inline-block;
+  padding: 1px 10px;
+  border-radius: 4px;
+  border: 1px solid;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  white-space: nowrap;
+}
+.uxv-ol-prop {
+  display: inline-block;
+  padding: 1px 6px;
+  margin-left: 4px;
+  background: var(--bgColor-muted, #f0f0f0);
+  border-radius: 3px;
+  font-size: 11px;
+  color: var(--fgColor-muted, #656d76);
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+.uxv-tool-active {
+  background: rgba(255,255,255,0.25) !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.4);
+}
+
+/* ── Breadcrumbs ───────────────────────────────────────────────────── */
+.uxv-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 14px 4px;
+  font-size: 11px;
+  background: rgba(0,0,0,0.05);
+  flex-basis: 100%;
+}
+.uxv-breadcrumb-link {
+  color: rgba(255,255,255,0.8);
+  text-decoration: none;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+.uxv-breadcrumb-link:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.15);
+  text-decoration: underline;
+}
+.uxv-breadcrumb-sep {
+  color: rgba(255,255,255,0.45);
+  font-size: 13px;
+}
+.uxv-breadcrumb-current {
+  color: rgba(255,255,255,0.95);
+  font-weight: 600;
+}
+
+/* ── Minimap ───────────────────────────────────────────────────────── */
+.uxv-minimap {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 160px;
+  height: 110px;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid var(--borderColor-default, #d1d5da);
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  overflow: hidden;
+  cursor: crosshair;
+  z-index: 10;
+}
+.uxv-minimap-content {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.5;
+}
+.uxv-minimap-content svg {
+  display: block;
+}
+.uxv-minimap-close {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 11;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: none;
+  background: rgba(0,0,0,0.15);
+  color: #555;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: center;
+  border-radius: 3px;
+  cursor: pointer;
+  pointer-events: auto;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.uxv-minimap:hover .uxv-minimap-close { opacity: 1; }
+.uxv-minimap-close:hover { background: rgba(0,0,0,0.3); color: #000; }
+.uxv-minimap-restore {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 10;
+  padding: 3px 8px;
+  border: 1px solid var(--borderColor-default, #d1d5da);
+  background: rgba(255,255,255,0.92);
+  color: #555;
+  font-size: 11px;
+  font-family: inherit;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  display: none;
+}
+.uxv-minimap-restore:hover { background: #fff; color: #000; }
+.uxv-minimap-viewport {
+  position: absolute;
+  border: 2px solid #FA4616;
+  background: rgba(250,70,22,0.08);
+  border-radius: 2px;
+  pointer-events: none;
+  transition: all 0.1s ease-out;
+}
+
+
+/* ── Export Dropdown ───────────────────────────────────────────────── */
+.uxv-export-wrap { position: relative; display: inline-block; }
+.uxv-export-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 100;
+  background: var(--bgColor-default, #fff);
+  border: 1px solid var(--borderColor-default, #d1d5da);
+  border-radius: 6px;
+  padding: 4px;
+  min-width: 100px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  margin-top: 2px;
+}
+.uxv-export-dropdown.uxv-show { display: flex; flex-direction: column; }
+.uxv-export-item {
+  display: block;
+  width: 100%;
+  padding: 5px 10px;
+  font-size: 12px;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--fgColor-default, #1f2328);
+  white-space: nowrap;
+}
+.uxv-export-item:hover { background: var(--bgColor-muted, #f6f8fa); }
+[data-color-mode="dark"] .uxv-export-dropdown { background: #161b22; border-color: #30363d; }
+[data-color-mode="dark"] .uxv-export-item { color: #e6edf3; }
+[data-color-mode="dark"] .uxv-export-item:hover { background: #21262d; }
+
+/* ── Body ──────────────────────────────────────────────────────────── */
+.uxv-body {
+  display: flex;
+  height: clamp(300px, calc(100vh - 200px), 900px);
+  overflow: hidden;
+  resize: vertical;
+}
+
+/* ── Canvas ────────────────────────────────────────────────────────── */
+.uxv-canvas-wrap {
+  flex: 1;
+  overflow: hidden;
+  cursor: grab;
+  position: relative;
+  background:
+    radial-gradient(circle, rgba(0,0,0,0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+.uxv-canvas {
+  transform-origin: 0 0;
+  padding: 20px;
+  will-change: transform;
+}
+
+/* ── SVG nodes ─────────────────────────────────────────────────────── */
+.uxv-svg .uxv-node .uxv-rect {
+  transition: filter 0.15s;
+  cursor: default;
+}
+.uxv-svg .uxv-node:hover .uxv-rect {
+  filter: brightness(0.95) drop-shadow(0 2px 6px rgba(0,0,0,0.1));
+}
+.uxv-svg .uxv-node[data-type="InvokeWorkflowFile"] { cursor: pointer; }
+.uxv-svg .uxv-node[data-type="InvokeWorkflowFile"]:hover .uxv-rect {
+  filter: brightness(0.92) drop-shadow(0 2px 8px rgba(249,168,37,0.25));
+}
+.uxv-svg .uxv-selected > .uxv-rect {
+  stroke-width: 3;
+  filter: drop-shadow(0 0 4px rgba(250,70,22,0.4));
+}
+
+/* ── Inspector ────────────────────────────────────────────────────── */
+.uxv-inspector {
+  border-bottom: 2px solid #FA4616;
+}
+.uxv-inspector h4 {
+  text-transform: none;
+  font-size: 13px;
+}
+.uxv-inspector-type {
+  font-size: 11px;
+  color: #666;
+  margin-bottom: 8px;
+  font-family: monospace;
+}
+.uxv-doc-link {
+  font-size: 10px;
+  color: #0969da;
+  text-decoration: none;
+  margin-left: 6px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.uxv-doc-link:hover { text-decoration: underline; }
+
+
+.uxv-inspector-details {
+  margin-top: 8px;
+}
+.uxv-inspector-details > summary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+}
+.uxv-inspector-details > summary::-webkit-details-marker { display: none; }
+.uxv-inspector-details > summary h4 {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #656d76;
+  margin: 0 0 4px 0;
+  display: inline;
+}
+.uxv-inspector-details > summary h4::before {
+  content: '▸ ';
+}
+.uxv-inspector-details[open] > summary h4::before {
+  content: '▾ ';
+}
+.uxv-inspector-details:not([open]) > summary h4 {
+  margin-bottom: 0;
+}
+.uxv-inspector-screenshot {
+  max-width: 100%;
+  max-height: 300px;
+  border: 1px solid var(--borderColor-default, #d1d5da);
+  border-radius: 4px;
+  cursor: pointer;
+  display: block;
+  margin: 4px 0;
+}
+.uxv-inspector-screenshot:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.uxv-inspector-annotation {
+  margin-top: 8px;
+  padding: 6px 8px;
+  background: #FFF8E1;
+  border-left: 3px solid #F9A825;
+  font-size: 11px;
+  color: #6B5400;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ── Collapsible containers ────────────────────────────────────────── */
+.uxv-collapsible {
+  cursor: pointer !important;
+}
+.uxv-collapsible:hover > rect:first-of-type {
+  filter: brightness(0.92);
+}
+
+/* ── Side Panel ────────────────────────────────────────────────────── */
+.uxv-panel {
+  width: 300px;
+  min-width: 180px;
+  max-width: 50%;
+  border-left: 1px solid var(--borderColor-default, #d1d5da);
+  overflow-y: auto;
+  padding: 0;
+  background: var(--bgColor-muted, #f6f8fa);
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+.uxv-panel-resizer {
+  width: 5px;
+  min-width: 5px;
+  cursor: col-resize;
+  background: transparent;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.uxv-panel-resizer:hover,
+.uxv-panel-resizer.uxv-resizing {
+  background: var(--borderColor-default, #d1d5da);
+}
+.uxv-panel-section {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--borderColor-default, #d1d5da);
+}
+details.uxv-panel-section > summary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+}
+details.uxv-panel-section > summary::-webkit-details-marker { display: none; }
+details.uxv-panel-section > summary h4::before {
+  content: '▸ ';
+  display: inline;
+}
+details[open].uxv-panel-section > summary h4::before {
+  content: '▾ ';
+}
+.uxv-panel-section h4 {
+  margin: 0 0 6px 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--fgColor-default, #24292f);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  display: inline;
+}
+details.uxv-panel-section:not([open]) > summary h4 {
+  margin-bottom: 0;
+}
+.uxv-panel table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.uxv-panel th {
+  text-align: left; font-size: 10px; font-weight: 600;
+  color: var(--fgColor-muted, #656d76);
+  padding: 3px 4px;
+  border-bottom: 1px solid var(--borderColor-default, #d1d5da);
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.uxv-panel td {
+  padding: 3px 4px;
+  color: var(--fgColor-default, #24292f);
+  border-bottom: 1px solid var(--borderColor-muted, #eaeef2);
+  word-break: break-word;
+  font-size: 11px;
+}
+.uxv-type {
+  font-family: "SF Mono", "Fira Code", Consolas, monospace;
+  font-size: 10px;
+  color: var(--fgColor-muted, #656d76);
+}
+.uxv-scope { font-size: 10px; color: var(--fgColor-muted, #656d76); min-width: 100px; }
+.uxv-cell-ellipsis {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: normal;
+}
+.uxv-dir { font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+.uxv-dir-in { color: #2E7D32; }
+.uxv-dir-out { color: #C62828; }
+.uxv-dir-inout { color: #EF6C00; }
+
+/* ── Design Mode Badge ─────────────────────────────────────────────── */
+.uxv-panel-mode {
+  padding: 8px 14px !important;
+}
+
+/* ── Error ──────────────────────────────────────────────────────────── */
+.uxv-error {
+  padding: 20px; color: #C62828; background: #FFEBEE;
+  border-radius: 6px; font-size: 13px; margin: 16px;
+}
+
+/* ── Dark mode ─────────────────────────────────────────────────────── */
+/* NOTE: [data-dark-theme] alone is WRONG — GitHub sets that attribute
+   even in light mode to store the user's dark-theme preference.
+   Use [data-color-mode="dark"] for explicit dark, and media query
+   inside [data-color-mode="auto"] for system-preference dark. */
+
+[data-color-mode="dark"] #uxv-viewer-container {
+  background: #0d1117; border-color: #30363d;
+}
+[data-color-mode="dark"] .uxv-panel {
+  background: #161b22; border-color: #30363d;
+}
+[data-color-mode="dark"] .uxv-panel-section { border-color: #30363d; }
+[data-color-mode="dark"] .uxv-panel-section h4 { color: #e6edf3; }
+[data-color-mode="dark"] .uxv-panel th { color: #8b949e; border-color: #30363d; }
+[data-color-mode="dark"] .uxv-panel td { color: #e6edf3; border-color: #21262d; }
+[data-color-mode="dark"] .uxv-inspector-type { color: #8b949e; }
+[data-color-mode="dark"] .uxv-type { color: #8b949e; }
+[data-color-mode="dark"] .uxv-scope { color: #8b949e; }
+[data-color-mode="dark"] .uxv-inspector-annotation { background: #2d1d00; color: #f0883e; border-color: #5a3600; }
+[data-color-mode="dark"] .uxv-canvas-wrap {
+  background: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+[data-color-mode="dark"] .uxv-outline-wrap { background: #0d1117; }
+[data-color-mode="dark"] .uxv-ol-row:hover { background: #161b22; }
+[data-color-mode="dark"] .uxv-ol-num { color: #484f58; }
+[data-color-mode="dark"] .uxv-ol-pipe { border-color: #30363d; }
+[data-color-mode="dark"] .uxv-ol-prop { background: #21262d; color: #8b949e; }
+[data-color-mode="dark"] .uxv-minimap { background: rgba(13,17,23,0.92); border-color: #30363d; }
+[data-color-mode="dark"] .uxv-minimap-close { background: rgba(255,255,255,0.1); color: #8b949e; }
+[data-color-mode="dark"] .uxv-minimap-close:hover { background: rgba(255,255,255,0.2); color: #e6edf3; }
+[data-color-mode="dark"] .uxv-minimap-restore { background: rgba(13,17,23,0.92); border-color: #30363d; color: #8b949e; }
+[data-color-mode="dark"] .uxv-minimap-restore:hover { background: #161b22; color: #e6edf3; }
+
+/* Auto mode — follow system preference */
+@media (prefers-color-scheme: dark) {
+  [data-color-mode="auto"] #uxv-viewer-container {
+    background: #0d1117; border-color: #30363d;
+  }
+  [data-color-mode="auto"] .uxv-panel {
+    background: #161b22; border-color: #30363d;
+  }
+  [data-color-mode="auto"] .uxv-panel-section { border-color: #30363d; }
+  [data-color-mode="auto"] .uxv-panel-section h4 { color: #e6edf3; }
+  [data-color-mode="auto"] .uxv-panel th { color: #8b949e; border-color: #30363d; }
+  [data-color-mode="auto"] .uxv-panel td { color: #e6edf3; border-color: #21262d; }
+  [data-color-mode="auto"] .uxv-inspector-type { color: #8b949e; }
+  [data-color-mode="auto"] .uxv-type { color: #8b949e; }
+  [data-color-mode="auto"] .uxv-scope { color: #8b949e; }
+  [data-color-mode="auto"] .uxv-inspector-annotation { background: #2d1d00; color: #f0883e; border-color: #5a3600; }
+  [data-color-mode="auto"] .uxv-canvas-wrap,
+  .uxv-canvas-wrap {
+    background: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   DIFF VIEWER STYLES
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Side-by-Side Compare ──────────────────────────────────────────── */
+.uxv-diff-side-by-side {
+  display: flex;
+  gap: 2px;
+  width: 100%;
+  min-height: 400px;
+}
+.uxv-diff-pane {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+  border: 1px solid var(--borderColor-default, #d1d5da);
+  border-radius: 4px;
+  background: var(--bgColor-default, #fff);
+}
+.uxv-diff-pane-label {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--bgColor-muted, #f6f8fa);
+  border-bottom: 1px solid var(--borderColor-default, #d1d5da);
+  text-align: center;
+  color: var(--fgColor-muted, #656d76);
+}
+.uxv-diff-pane-content {
+  padding: 8px;
+  overflow: auto;
+}
+.uxv-diff-pane-content svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ── Diff Button ───────────────────────────────────────────────────── */
+.uxv-diff-btn {
+  font-size: 11px !important;
+  padding: 3px 10px !important;
+}
+
+/* ── Diff Viewer Container ─────────────────────────────────────────── */
+.uxv-diff-viewer {
+  border: 1px solid var(--borderColor-default, #d1d5da);
+  border-top: none;
+  background: var(--bgColor-default, #fff);
+  overflow: hidden;
+}
+.uxv-diff-body {
+  height: clamp(250px, calc(100vh - 300px), 700px);
+  overflow: hidden;
+  resize: vertical;
+}
+.uxv-diff-viewer .uxv-canvas-wrap {
+  height: 100%;
+}
+
+/* ── Diff Summary Bar ──────────────────────────────────────────────── */
+.uxv-diff-summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: var(--bgColor-muted, #f6f8fa);
+  border-bottom: 1px solid var(--borderColor-default, #d1d5da);
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  flex-wrap: wrap;
+}
+.uxv-diff-path {
+  font-family: "SF Mono", Consolas, monospace;
+  font-size: 11px;
+  color: var(--fgColor-muted, #656d76);
+}
+.uxv-diff-stats {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+.uxv-diff-added {
+  color: #1a7f37;
+  font-weight: 600;
+}
+.uxv-diff-removed {
+  color: #cf222e;
+  font-weight: 600;
+}
+.uxv-diff-modified {
+  color: #9a6700;
+  font-weight: 600;
+}
+.uxv-diff-unchanged {
+  color: var(--fgColor-muted, #656d76);
+  font-style: italic;
+}
+
+/* ── Diff Badges ───────────────────────────────────────────────────── */
+.uxv-diff-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  letter-spacing: 0.5px;
+}
+.uxv-diff-new { background: #dafbe1; color: #1a7f37; }
+.uxv-diff-del { background: #ffebe9; color: #cf222e; }
+.uxv-diff-mod { background: #fff8c5; color: #9a6700; }
+.uxv-diff-err { background: #ffebe9; color: #8a1c28; }
+
+.uxv-diff-note {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--borderColor-default, #d1d5da);
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+.uxv-diff-note-warning {
+  background: #fff8e1;
+  color: #7a5400;
+}
+.uxv-diff-note-error {
+  background: #ffebe9;
+  color: #8a1c28;
+}
+
+/* ── Diff Legend ───────────────────────────────────────────────────── */
+.uxv-diff-legend {
+  display: flex;
+  gap: 10px;
+  font-size: 10px;
+  color: var(--fgColor-muted, #656d76);
+}
+.uxv-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.uxv-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+.uxv-legend-added { background: #2da44e; }
+.uxv-legend-removed { background: #cf222e; }
+.uxv-legend-modified { background: #bf8700; }
+
+/* ── Diff Ref Info ─────────────────────────────────────────────────── */
+.uxv-diff-refs {
+  font-family: "SF Mono", Consolas, monospace;
+  font-size: 10px;
+  padding: 2px 6px;
+  background: var(--bgColor-default, #fff);
+  border: 1px solid var(--borderColor-default, #d1d5da);
+  border-radius: 4px;
+  color: var(--fgColor-muted, #656d76);
+  cursor: help;
+}
+
+/* ── Diff layout toggle button ────────────────────────────────────── */
+.uxv-diff-layout-btn {
+  margin-left: auto;
+  padding: 2px 8px;
+  font-size: 14px;
+  background: var(--bgColor-default, #fff);
+  border: 1px solid var(--borderColor-default, #d1d5da);
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--fgColor-muted, #656d76);
+  line-height: 1;
+}
+.uxv-diff-layout-btn:hover {
+  background: var(--bgColor-muted, #f6f8fa);
+  color: var(--fgColor-default, #1f2328);
+}
+
+/* ── Side-by-side diff ────────────────────────────────────────────── */
+.uxv-diff-sidebyside {
+  display: flex;
+  gap: 2px;
+  height: 500px;
+  border: 1px solid #d1d5da;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+.uxv-diff-sidebyside.uxv-diff-stacked {
+  flex-direction: column;
+  height: 800px;
+}
+.uxv-diff-stacked .uxv-diff-pane-old {
+  border-right: none;
+  border-bottom: 1px solid #d1d5da;
+}
+.uxv-diff-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.uxv-diff-pane-header {
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: #f6f8fa;
+  border-bottom: 1px solid #d1d5da;
+  color: #656d76;
+}
+.uxv-diff-pane-old .uxv-diff-pane-header { color: #CF222E; }
+.uxv-diff-pane-new .uxv-diff-pane-header { color: #1a7f37; }
+.uxv-diff-pane .uxv-canvas-wrap {
+  flex: 1;
+  overflow: hidden;
+  cursor: grab;
+}
+.uxv-diff-pane-old { border-right: 1px solid #d1d5da; }
+
+/* ── Property diff panel ──────────────────────────────────────────── */
+.uxv-prop-diff-panel { margin-top: 4px; }
+.uxv-prop-diff {
+  border: 1px solid #d1d5da;
+  border-radius: 6px;
+  padding: 12px;
+  background: #fff;
+}
+.uxv-prop-diff-header {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.uxv-prop-diff-table {
+  width: 100%;
+  font-size: 12px;
+  border-collapse: collapse;
+}
+.uxv-prop-diff-table th,
+.uxv-prop-diff-table td {
+  padding: 4px 8px;
+  border: 1px solid #e1e4e8;
+  text-align: left;
+}
+.uxv-prop-diff-table th {
+  background: #f6f8fa;
+  font-weight: 600;
+}
+.uxv-prop-changed td { background: #fff8c5; }
+.uxv-diff-selected rect,
+.uxv-diff-selected polygon {
+  stroke: #0969da !important;
+  stroke-width: 3px !important;
+}
+
+/* ── Keyboard Shortcut Overlay ─────────────────────────────────────── */
+.uxv-shortcut-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.uxv-shortcut-dialog {
+  background: var(--bgColor-default, #fff);
+  border: 1px solid var(--borderColor-default, #d1d5da);
+  border-radius: 10px;
+  padding: 20px 28px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  min-width: 320px;
+  max-width: 420px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  color: var(--fgColor-default, #1f2328);
+}
+.uxv-shortcut-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  font-size: 15px;
+}
+.uxv-shortcut-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--fgColor-muted, #636c76);
+  padding: 0 4px;
+  line-height: 1;
+}
+.uxv-shortcut-close:hover { color: var(--fgColor-default, #1f2328); }
+.uxv-shortcut-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.uxv-shortcut-table td {
+  padding: 5px 0;
+  vertical-align: middle;
+}
+.uxv-shortcut-table td:first-child {
+  white-space: nowrap;
+  padding-right: 16px;
+  width: 1%;
+}
+.uxv-shortcut-table kbd {
+  display: inline-block;
+  padding: 2px 6px;
+  font-size: 11px;
+  font-family: "SF Mono", Consolas, monospace;
+  background: var(--bgColor-muted, #f6f8fa);
+  border: 1px solid var(--borderColor-default, #d1d5da);
+  border-radius: 4px;
+  box-shadow: 0 1px 0 var(--borderColor-default, #d1d5da);
+}
+.uxv-shortcut-tip {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--fgColor-muted, #636c76);
+  border-top: 1px solid var(--borderColor-default, #d1d5da);
+  padding-top: 10px;
+}
+
+/* ── Context Menu ──────────────────────────────────────────────────── */
+.uxv-context-menu {
+  position: absolute;
+  z-index: 200;
+  background: var(--bgColor-default, #fff);
+  border: 1px solid var(--borderColor-default, #d1d5da);
+  border-radius: 8px;
+  padding: 4px 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  min-width: 200px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+.uxv-context-item {
+  display: block;
+  width: 100%;
+  padding: 6px 14px;
+  font-size: 13px;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--fgColor-default, #1f2328);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.uxv-context-item:hover {
+  background: var(--bgColor-muted, #f6f8fa);
+}
+
+/* ── Print ─────────────────────────────────────────────────────────── */
+@media print {
+  .uxv-header, .uxv-panel, .uxv-panel-resizer { display: none !important; }
+  #uxv-viewer-container { border: none !important; box-shadow: none !important; }
+  .uxv-body { height: auto !important; }
+  .uxv-canvas-wrap {
+    overflow: visible !important;
+    background: white !important;
+    cursor: default !important;
+    height: auto !important;
+  }
+  .uxv-canvas {
+    transform: none !important;
+    width: 100% !important;
+  }
+  .uxv-canvas svg { width: 100% !important; height: auto !important; }
+}
+
+/* ── Outline filter ────────────────────────────────────────────────── */
+.uxv-outline-filter {
+  width: calc(100% - 16px); margin: 8px; padding: 4px 8px;
+  font-size: 12px; border: 1px solid var(--borderColor-default, #d1d5da);
+  border-radius: 6px; background: var(--bgColor-default, #fff);
+  font-family: inherit;
+}
+.uxv-outline-filter:focus { outline: 2px solid #FA4616; border-color: transparent; }
+
+/* ── Bookmarks ─────────────────────────────────────────────────────── */
+.uxv-bookmark-list { font-size: 12px; }
+.uxv-bookmark-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 4px 8px; border-radius: 4px; cursor: pointer;
+}
+.uxv-bookmark-item:hover { background: var(--bgColor-accent-muted, #ddf4ff); }
+.uxv-bookmark-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.uxv-bookmark-remove {
+  background: none; border: none; cursor: pointer; color: var(--fgColor-muted, #656d76);
+  font-size: 14px; padding: 0 4px; line-height: 1;
+}
+.uxv-bookmark-remove:hover { color: #CF222E; }
+
+/* ── Variable reference highlighting ───────────────────────────────── */
+.uxv-var-highlight rect.uxv-rect,
+.uxv-var-highlight > rect:first-of-type {
+  stroke: #F9A825 !important;
+  stroke-width: 3 !important;
+  filter: drop-shadow(0 0 4px rgba(249,168,37,0.5));
+}
+.uxv-varname:hover { background: var(--bgColor-accent-muted, #ddf4ff); }
+.uxv-var-active { background: #FFF8E1 !important; font-weight: 700; }
+
+/* ── Screenshot hover tooltip ─────────────────────────────────────── */
+.uxv-screenshot-tooltip {
+  position: absolute;
+  z-index: 1000;
+  display: none;
+  pointer-events: none;
+  background: var(--bgColor-default, #fff);
+  border: 1px solid var(--borderColor-default, #d1d5da);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  padding: 6px;
+  max-width: 320px;
+}
+/* ── Invoke preview tooltip ────────────────────────────────────────── */
+.uxv-invoke-preview {
+  position: absolute; z-index: 1000; display: none; pointer-events: none;
+  background: var(--bgColor-default, #fff); border: 1px solid var(--borderColor-default, #d1d5da);
+  border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  padding: 10px 14px; max-width: 320px; font-size: 12px;
+}
+/* ── Diff inline summary ───────────────────────────────────────────── */
+.uxv-diff-inline-summary {
+  display: inline-flex; gap: 4px; margin-left: 8px;
+  font-size: 11px; font-family: 'SF Mono', Consolas, monospace; font-weight: 600;
+}
+.uxv-diff-inline-add { color: #2DA44E; }
+.uxv-diff-inline-mod { color: #BF8700; }
+.uxv-diff-inline-del { color: #CF222E; }
+.uxv-diff-inline-loading { color: #656d76; animation: uxv-pulse 1s infinite; }
+
+@keyframes uxv-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+.uxv-invoke-preview strong { display: block; margin-bottom: 4px; }
+.uxv-invoke-args { margin-top: 6px; font-size: 11px; color: var(--fgColor-muted, #656d76); }
+.uxv-invoke-args div { padding: 1px 0; }
+
+.uxv-screenshot-tooltip img {
+  max-width: 100%;
+  max-height: 240px;
+  border-radius: 4px;
+  display: block;
+}

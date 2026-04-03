@@ -1,0 +1,40 @@
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editors
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Packages
+node_modules/
+*.zip
+
+# Build output
+dist/
+
+# Claude Code
+.claude/
+
+# Playwright MCP artifacts
+.playwright-mcp/
+
+# Local capture/debug artifacts
+/tmp-*.png
+/tmp-*.txt
+/tmp-*.md
+/debug-*.png
+/test-*.png
+/test-*.txt
+/test-*.md
+/test[0-9]*.png
+/verify-*.png
+/url*-*.png
+/url*-*.txt
+/url*-*.md
+/screenshot-*-viewport.png
+/reframework-snapshot.md

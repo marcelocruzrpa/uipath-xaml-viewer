@@ -1,0 +1,49 @@
+{
+  "manifest_version": 3,
+  "name": "UiPath XAML Visualizer for GitHub",
+  "version": "1.0.0",
+  "description": "Instantly visualize UiPath workflow XAML files as interactive diagrams on GitHub.",
+  "author": "Marcelo Cruz",
+  "permissions": ["storage", "scripting"],
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "host_permissions": [
+    "*://github.com/*",
+    "*://raw.githubusercontent.com/*"
+  ],
+  "optional_host_permissions": [
+    "https://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://github.com/*"],
+      "js": [
+        "lib/dagre.min.js",
+        "src/utils.js",
+        "src/content-fetch.js",
+        "src/parser.js",
+        "src/renderer.js",
+        "src/diff.js",
+        "src/content-export.js",
+        "src/content-search.js",
+        "src/content-state.js",
+        "src/content-github.js",
+        "src/content-viewer.js",
+        "src/content-interactions.js",
+        "src/content.js"
+      ],
+      "css": ["src/styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "options_ui": {
+    "page": "src/options.html",
+    "open_in_tab": true
+  }
+}

@@ -1,0 +1,33 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="Main"
+  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+  xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+  xmlns:ui="http://schemas.uipath.com/workflow/activities"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  DisplayName="Main">
+  <Sequence DisplayName="Main Sequence" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="userName" />
+      <Variable x:TypeArguments="x:Int32" Default="0" Name="counter" />
+    </Sequence.Variables>
+    <ui:LogMessage DisplayName="Log Start" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="Starting workflow" />
+    <Assign DisplayName="Set Counter" sap2010:WorkflowViewState.IdRef="Assign_1">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:Int32">[counter]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:Int32">42</InArgument>
+      </Assign.Value>
+    </Assign>
+    <If DisplayName="Check Counter" sap2010:WorkflowViewState.IdRef="If_1" Condition="[counter > 10]">
+      <If.Then>
+        <ui:LogMessage DisplayName="Log High" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="Counter is high" />
+      </If.Then>
+      <If.Else>
+        <ui:LogMessage DisplayName="Log Low" sap2010:WorkflowViewState.IdRef="LogMessage_3" Level="Warn" Message="Counter is low" />
+      </If.Else>
+    </If>
+    <ui:LogMessage DisplayName="Log End" sap2010:WorkflowViewState.IdRef="LogMessage_4" Level="Info" Message="Done" />
+  </Sequence>
+</Activity>

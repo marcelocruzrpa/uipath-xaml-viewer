@@ -1,0 +1,6 @@
+<Activity mc:Ignorable="sap sap2010"
+  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities">
+  <Sequence DisplayName="Broken">
+    <!-- Missing closing tag intentionally -->
+    <Assign DisplayName="Oops">
+</Activity>

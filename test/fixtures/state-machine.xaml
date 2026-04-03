@@ -1,0 +1,49 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="StateMachineProcess"
+  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+  xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+  xmlns:ui="http://schemas.uipath.com/workflow/activities"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  DisplayName="StateMachineProcess">
+  <StateMachine DisplayName="Main State Machine" sap2010:WorkflowViewState.IdRef="StateMachine_1" x:Name="SM_Main">
+    <StateMachine.InitialState>
+      <x:Reference>State_Init</x:Reference>
+    </StateMachine.InitialState>
+    <State x:Name="State_Init" sap2010:WorkflowViewState.IdRef="State_1" DisplayName="Init">
+      <State.Entry>
+        <ui:LogMessage DisplayName="Log Init" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="Entering Init" />
+      </State.Entry>
+      <State.Transitions>
+        <Transition DisplayName="To Processing" sap2010:WorkflowViewState.IdRef="Transition_1" x:Name="Trans_1">
+          <Transition.To>
+            <x:Reference>State_Processing</x:Reference>
+          </Transition.To>
+        </Transition>
+      </State.Transitions>
+    </State>
+    <State x:Name="State_Processing" sap2010:WorkflowViewState.IdRef="State_2" DisplayName="Processing">
+      <State.Entry>
+        <Sequence DisplayName="Process Data" sap2010:WorkflowViewState.IdRef="Sequence_1">
+          <Assign DisplayName="Compute" sap2010:WorkflowViewState.IdRef="Assign_1">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:Int32">[result]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:Int32">42</InArgument>
+            </Assign.Value>
+          </Assign>
+          <ui:LogMessage DisplayName="Log Result" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="[result]" />
+        </Sequence>
+      </State.Entry>
+      <State.Transitions>
+        <Transition DisplayName="To End" sap2010:WorkflowViewState.IdRef="Transition_2" x:Name="Trans_2">
+          <Transition.To>
+            <x:Reference>FinalState_1</x:Reference>
+          </Transition.To>
+        </Transition>
+      </State.Transitions>
+    </State>
+    <FinalState x:Name="FinalState_1" sap2010:WorkflowViewState.IdRef="FinalState_1" DisplayName="End" />
+  </StateMachine>
+</Activity>

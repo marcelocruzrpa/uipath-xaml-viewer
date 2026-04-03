@@ -1,0 +1,43 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="RichStateMachine"
+  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+  xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+  xmlns:ui="http://schemas.uipath.com/workflow/activities"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  DisplayName="RichStateMachine">
+  <StateMachine DisplayName="Main SM" sap2010:WorkflowViewState.IdRef="SM_1">
+    <StateMachine.InitialState>
+      <x:Reference>State_Idle</x:Reference>
+    </StateMachine.InitialState>
+    <State x:Name="State_Idle" sap2010:WorkflowViewState.IdRef="State_1" DisplayName="Idle">
+      <State.Transitions>
+        <Transition DisplayName="Start Processing" sap2010:WorkflowViewState.IdRef="Trans_1" x:Name="Trans_1">
+          <Transition.Condition>
+            <InArgument x:TypeArguments="x:Boolean">[hasItems]</InArgument>
+          </Transition.Condition>
+          <Transition.Trigger>
+            <ui:LogMessage DisplayName="Check Queue" sap2010:WorkflowViewState.IdRef="TrigLog_1" Level="Info" Message="Checking" />
+          </Transition.Trigger>
+          <Transition.Action>
+            <Assign DisplayName="Set Flag" sap2010:WorkflowViewState.IdRef="ActAssign_1">
+              <Assign.To><OutArgument x:TypeArguments="x:Boolean">[processing]</OutArgument></Assign.To>
+              <Assign.Value><InArgument x:TypeArguments="x:Boolean">True</InArgument></Assign.Value>
+            </Assign>
+          </Transition.Action>
+          <Transition.To>
+            <State x:Name="State_Active" sap2010:WorkflowViewState.IdRef="State_2" DisplayName="Active">
+              <State.Transitions>
+                <Transition DisplayName="Complete" sap2010:WorkflowViewState.IdRef="Trans_2" x:Name="Trans_2">
+                  <Transition.To>
+                    <FinalState x:Name="FinalState_1" sap2010:WorkflowViewState.IdRef="Final_1" DisplayName="Done" />
+                  </Transition.To>
+                </Transition>
+              </State.Transitions>
+            </State>
+          </Transition.To>
+        </Transition>
+      </State.Transitions>
+    </State>
+  </StateMachine>
+</Activity>

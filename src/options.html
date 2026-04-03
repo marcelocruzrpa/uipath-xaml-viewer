@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>UiPath XAML Visualizer - Settings</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: #f6f8fa;
+      color: #24292f;
+      min-width: 480px;
+      padding: 32px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #d1d5da;
+    }
+    .header .logo { font-size: 28px; color: #FA4616; }
+    .header h1 { font-size: 18px; font-weight: 700; }
+    .header .version { font-size: 12px; color: #656d76; margin-left: auto; }
+    .section { margin-bottom: 24px; }
+    .section h2 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+    .section p { font-size: 13px; color: #656d76; line-height: 1.5; margin-bottom: 12px; }
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #656d76;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-family: "SF Mono", Consolas, monospace;
+      border: 1px solid #d1d5da;
+      border-radius: 6px;
+      background: #fff;
+      color: #24292f;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    input:focus { border-color: #FA4616; box-shadow: 0 0 0 3px rgba(250, 70, 22, 0.1); }
+    .btn-row { display: flex; gap: 8px; margin-top: 12px; }
+    button {
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: 1px solid transparent;
+    }
+    .btn-primary { background: #FA4616; color: #fff; border-color: #FA4616; }
+    .btn-primary:hover { background: #E03A0F; }
+    .btn-secondary { background: #f6f8fa; color: #24292f; border-color: #d1d5da; }
+    .btn-secondary:hover { background: #eaeef2; }
+    .btn-danger { background: #fff; color: #CF222E; border-color: #CF222E; }
+    .btn-danger:hover { background: #FFEBE9; }
+    .status {
+      font-size: 12px;
+      margin-top: 8px;
+      padding: 6px 10px;
+      border-radius: 4px;
+      display: none;
+    }
+    .status.success { display: block; background: #dafbe1; color: #1a7f37; }
+    .status.error { display: block; background: #ffebe9; color: #cf222e; }
+    .status.info { display: block; background: #ddf4ff; color: #0969da; }
+    .help-link { font-size: 12px; color: #0969da; text-decoration: none; }
+    .help-link:hover { text-decoration: underline; }
+    .rate-info {
+      font-size: 12px;
+      color: #656d76;
+      margin-top: 16px;
+      padding: 10px;
+      background: #fff;
+      border: 1px solid #d1d5da;
+      border-radius: 6px;
+    }
+    .rate-info strong { color: #24292f; }
+    code { background: #f0f3f6; padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <span class="logo">◈</span>
+    <h1>UiPath XAML Visualizer</h1>
+    <!-- Keep version in sync with manifest.json -->
+    <span class="version">v1.0.0</span>
+  </div>
+
+  <div class="section">
+    <h2>General</h2>
+    <label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:13px;color:#24292f;cursor:pointer">
+      <input type="checkbox" id="auto-visualize" style="width:16px;height:16px;accent-color:#FA4616;cursor:pointer">
+      Automatically visualize XAML files on GitHub
+    </label>
+    <p style="margin-top:4px">When enabled, the diagram viewer opens automatically on <code>.xaml</code> file pages.</p>
+  </div>
+
+  <div class="section">
+    <h2>GitHub Personal Access Token</h2>
+    <p>
+      A token increases the GitHub API rate limit from 60 to 5,000 requests per hour and is required for private repositories.
+      The token is stored locally in this browser profile only and is not synced across devices.
+    </p>
+    <p>
+      Prefer the smallest scope that works for your repos. Fine-grained tokens are recommended when possible.
+    </p>
+    <p>
+      <a class="help-link" href="https://github.com/settings/tokens" target="_blank" rel="noopener">
+        - Manage tokens on GitHub
+      </a>
+    </p>
+
+    <label for="host">GitHub Instance</label>
+    <input type="text" id="host" placeholder="github.com" value="github.com">
+    <p style="font-size:11px;color:#656d76;margin-bottom:8px">
+      Enter the hostname of your GitHub instance (e.g., github.mycompany.com).
+    </p>
+    <button class="btn-secondary" id="add-host" style="margin-bottom:12px;font-size:12px;padding:4px 12px">Register GHE Host</button>
+    <p style="font-size:11px;color:#656d76;margin-bottom:12px">
+      Registering a host enables the extension on that instance. A token is optional (only needed for private repos or higher rate limits).
+    </p>
+
+    <div id="ghe-host-list" style="margin-bottom:16px;padding:8px;background:#fff;border:1px solid #d1d5da;border-radius:6px"></div>
+
+    <label for="token">Token (optional for public repos)</label>
+    <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false">
+
+    <div class="btn-row">
+      <button class="btn-primary" id="save">Save Token</button>
+      <button class="btn-secondary" id="test">Test Connection</button>
+      <button class="btn-danger" id="clear">Clear</button>
+    </div>
+
+    <div class="status" id="status"></div>
+
+    <div class="rate-info" id="rate-info" style="display:none">
+      <strong>API Rate Limit:</strong>
+      <span id="rate-remaining">-</span> / <span id="rate-limit">-</span> remaining
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

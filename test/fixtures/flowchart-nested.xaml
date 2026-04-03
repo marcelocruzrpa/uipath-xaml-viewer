@@ -1,0 +1,35 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="NestedFlowchart"
+  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+  xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+  xmlns:ui="http://schemas.uipath.com/workflow/activities"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  DisplayName="NestedFlowchart">
+  <Flowchart DisplayName="Main Flowchart" sap2010:WorkflowViewState.IdRef="Flowchart_1">
+    <FlowStep x:Name="FlowStep_1" sap2010:WorkflowViewState.IdRef="FlowStep_1">
+      <Sequence DisplayName="Setup Steps" sap2010:WorkflowViewState.IdRef="Sequence_1">
+        <Assign DisplayName="Set Name" sap2010:WorkflowViewState.IdRef="Assign_1">
+          <Assign.To>
+            <OutArgument x:TypeArguments="x:String">[name]</OutArgument>
+          </Assign.To>
+          <Assign.Value>
+            <InArgument x:TypeArguments="x:String">"test"</InArgument>
+          </Assign.Value>
+        </Assign>
+        <Assign DisplayName="Set Age" sap2010:WorkflowViewState.IdRef="Assign_2">
+          <Assign.To>
+            <OutArgument x:TypeArguments="x:Int32">[age]</OutArgument>
+          </Assign.To>
+          <Assign.Value>
+            <InArgument x:TypeArguments="x:Int32">25</InArgument>
+          </Assign.Value>
+        </Assign>
+        <ui:LogMessage DisplayName="Log Info" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[name]" />
+      </Sequence>
+    </FlowStep>
+    <FlowStep x:Name="FlowStep_2" sap2010:WorkflowViewState.IdRef="FlowStep_2">
+      <ui:LogMessage DisplayName="Done" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="Finished" />
+    </FlowStep>
+  </Flowchart>
+</Activity>
