@@ -1,5 +1,6 @@
 # UiPath XAML Visualizer for GitHub
 
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/kompgmchmppekbnafaigolnjljbgcccm)](https://chromewebstore.google.com/detail/uipath-xaml-visualizer-fo/kompgmchmppekbnafaigolnjljbgcccm)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 A Chromium extension that renders UiPath workflow `.xaml` files as interactive diagrams directly on GitHub and GitHub Enterprise, with side-by-side visual diffs for commits, pull requests, and compare pages.
@@ -71,6 +72,10 @@ A Chromium extension that renders UiPath workflow `.xaml` files as interactive d
 - Response caching (LRU, max 200 items) to minimize API calls.
 
 ## Installation
+
+**[Install from the Chrome Web Store](https://chromewebstore.google.com/detail/uipath-xaml-visualizer-fo/kompgmchmppekbnafaigolnjljbgcccm)**
+
+### Manual Installation (for development)
 
 1. Download and unzip the extension folder.
 2. Open `chrome://extensions/`.
