@@ -1,5 +1,5 @@
 /**
- * UiPath XAML Visualizer — Shared state and constants.
+ * UiPath XAML Viewer — Shared state and constants.
  * All modules communicate via the window.UXV namespace.
  */
 window.UXV = (() => {

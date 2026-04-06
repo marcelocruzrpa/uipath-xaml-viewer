@@ -1,4 +1,4 @@
-# Contributing to UiPath XAML Visualizer for GitHub
+# Contributing to UiPath XAML Viewer for GitHub
 
 Thanks for your interest in contributing! This guide covers how to report issues, suggest features, and submit pull requests.
 

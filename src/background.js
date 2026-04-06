@@ -1,5 +1,5 @@
 /**
- * UiPath XAML Visualizer — Service worker for dynamic GHE host registration.
+ * UiPath XAML Viewer — Service worker for dynamic GHE host registration.
  *
  * Reads the list of known GitHub Enterprise hosts from `ghe_hosts` in storage
  * and registers content scripts dynamically so the extension works on

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Cross-platform packaging script.
- * Creates dist/uipath-xaml-visualizer.zip containing extension files.
+ * Creates dist/uipath-xaml-viewer.zip containing extension files.
  */
 const archiver = require('archiver');
 const fs = require('fs');
@@ -9,7 +9,7 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const distDir = path.join(root, 'dist');
-const outFile = path.join(distDir, 'uipath-xaml-visualizer.zip');
+const outFile = path.join(distDir, 'uipath-xaml-viewer.zip');
 
 if (!fs.existsSync(distDir)) fs.mkdirSync(distDir);
 

@@ -1,5 +1,5 @@
 /**
- * UiPath XAML Visualizer — Export module (SVG, PNG).
+ * UiPath XAML Viewer — Export module (SVG, PNG).
  * Extracted from content.js for maintainability.
  */
 window.UiPathExport = (() => {

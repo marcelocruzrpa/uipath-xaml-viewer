@@ -1,6 +1,6 @@
 # Privacy Policy
 
-**UiPath XAML Visualizer for GitHub** ("the Extension")
+**UiPath XAML Viewer for GitHub** ("the Extension")
 
 Last updated: 2026-04-03
 

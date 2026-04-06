@@ -1,5 +1,5 @@
 /**
- * UiPath XAML Visualizer — GitHub integration module.
+ * UiPath XAML Viewer — GitHub integration module.
  * Handles GitHub page detection, XAML fetching, button injection, and page observation.
  */
 (() => {

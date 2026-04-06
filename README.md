@@ -1,4 +1,4 @@
-# UiPath XAML Visualizer for GitHub
+# UiPath XAML Viewer for GitHub
 
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/kompgmchmppekbnafaigolnjljbgcccm)](https://chromewebstore.google.com/detail/uipath-xaml-visualizer-fo/kompgmchmppekbnafaigolnjljbgcccm)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -153,7 +153,7 @@ npm install        # Install dev dependencies (vitest, jsdom, eslint)
 npm run lint       # Run ESLint
 npm test           # Run all tests
 npm run test:watch # Run tests in watch mode
-npm run package    # Build dist/uipath-xaml-visualizer.zip
+npm run package    # Build dist/uipath-xaml-viewer.zip
 ```
 
 ## Browser Support

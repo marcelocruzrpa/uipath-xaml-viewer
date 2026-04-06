@@ -1,5 +1,5 @@
 /**
- * UiPath XAML Visualizer — Search module.
+ * UiPath XAML Viewer — Search module.
  * Pure search functions extracted from content.js for maintainability.
  */
 window.UiPathSearch = (() => {

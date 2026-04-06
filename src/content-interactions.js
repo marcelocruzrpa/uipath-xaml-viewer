@@ -1,5 +1,5 @@
 /**
- * UiPath XAML Visualizer — User interaction handlers module.
+ * UiPath XAML Viewer — User interaction handlers module.
  * Pan-zoom, collapse, inspector, search, keyboard, context menu, bookmarks, etc.
  */
 (() => {

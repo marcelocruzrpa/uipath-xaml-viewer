@@ -1,5 +1,5 @@
 /**
- * UiPath XAML Visualizer — Orchestrator entry point.
+ * UiPath XAML Viewer — Orchestrator entry point.
  *
  * Modules are loaded in order via manifest.json:
  *   content-state.js → content-github.js → content-viewer.js → content-interactions.js → content.js

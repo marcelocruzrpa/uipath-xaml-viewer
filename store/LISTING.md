@@ -1,13 +1,13 @@
 # Chrome Web Store Listing
 
 ## Name
-UiPath XAML Visualizer for GitHub
+UiPath XAML Viewer for GitHub
 
 ## Summary (132 chars max)
 View UiPath XAML on GitHub as interactive diagrams, flowcharts, state machines, and side-by-side visual diffs.
 
 ## Description
-UiPath XAML Visualizer for GitHub helps developers, reviewers, and automation teams understand UiPath workflows without leaving GitHub. Open any `.xaml` file on GitHub.com or GitHub Enterprise and switch from raw XML to a navigable visual view built for code review.
+UiPath XAML Viewer for GitHub helps developers, reviewers, and automation teams understand UiPath workflows without leaving GitHub. Open any `.xaml` file on GitHub.com or GitHub Enterprise and switch from raw XML to a navigable visual view built for code review.
 
 Highlights:
 - Visualize Sequence, Flowchart, and State Machine workflows

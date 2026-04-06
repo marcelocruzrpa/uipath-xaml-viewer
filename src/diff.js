@@ -1,5 +1,5 @@
 /**
- * UiPath XAML Diff Visualizer v2
+ * UiPath XAML Diff Viewer v2
  * Uses the GitHub REST API for SHA resolution and authenticated file fetching.
  */
 window.UiPathDiff = (() => {

@@ -1,5 +1,5 @@
 /**
- * UiPath XAML Visualizer — Shared authenticated fetch module.
+ * UiPath XAML Viewer — Shared authenticated fetch module.
  * Provides token-aware GitHub API access for all content scripts.
  */
 window.UiPathFetch = (() => {

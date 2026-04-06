@@ -1,5 +1,5 @@
 /**
- * UiPath XAML Visualizer — Shared utilities.
+ * UiPath XAML Viewer — Shared utilities.
  * Loaded before parser, renderer, diff, and content scripts.
  */
 window.UiPathUtils = (() => {
