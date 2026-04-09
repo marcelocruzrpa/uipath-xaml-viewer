@@ -29,8 +29,8 @@ window.UiPathFetch = (() => {
   async function getToken() {
     try {
       const host = location.hostname;
-      const result = await chrome.storage.local.get([`github_token_${host}`, 'github_token']);
-      return result[`github_token_${host}`] || result.github_token || null;
+      const result = await chrome.storage.local.get([`github_token_${host}`]);
+      return result[`github_token_${host}`] || null;
     } catch (_e) {
       return null;
     }
@@ -126,8 +126,8 @@ window.UiPathFetch = (() => {
   async function getGitLabToken() {
     try {
       const host = location.hostname;
-      const result = await chrome.storage.local.get([`gitlab_token_${host}`, 'gitlab_token']);
-      return result[`gitlab_token_${host}`] || result.gitlab_token || null;
+      const result = await chrome.storage.local.get([`gitlab_token_${host}`]);
+      return result[`gitlab_token_${host}`] || null;
     } catch (_e) {
       return null;
     }

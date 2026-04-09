@@ -12,7 +12,7 @@ function tokenKey() {
 
 chrome.storage.local.get([tokenKey(), 'uxv_auto_visualize'], (result) => {
   if (result[tokenKey()]) tokenInput.value = result[tokenKey()];
-  autoVizCheckbox.checked = !!result.uxv_auto_visualize;
+  autoVizCheckbox.checked = result.uxv_auto_visualize !== false;
 });
 
 autoVizCheckbox.addEventListener('change', () => {
@@ -122,7 +122,7 @@ if (addHostBtn) {
       return;
     }
 
-    chrome.permissions.request({ origins: [`*://${host}/*`] }, async (granted) => {
+    chrome.permissions.request({ origins: [`https://${host}/*`] }, async (granted) => {
       if (!granted) {
         showStatus('Host permission denied. The extension cannot run on ' + host + ' without it.', 'error');
         return;
@@ -148,7 +148,7 @@ document.getElementById('save').addEventListener('click', () => {
 
   // For GHE hosts, ensure host is registered and permission is granted
   if (host !== 'github.com') {
-    chrome.permissions.request({ origins: [`*://${host}/*`] }, async (granted) => {
+    chrome.permissions.request({ origins: [`https://${host}/*`] }, async (granted) => {
       if (!granted) {
         showStatus('Host permission denied. The extension cannot run on ' + host + ' without it.', 'error');
         return;
@@ -331,7 +331,7 @@ if (addGlHostBtn) {
       return;
     }
 
-    chrome.permissions.request({ origins: [`*://${host}/*`] }, async (granted) => {
+    chrome.permissions.request({ origins: [`https://${host}/*`] }, async (granted) => {
       if (!granted) {
         showGlStatus('Host permission denied. The extension cannot run on ' + host + ' without it.', 'error');
         return;
@@ -360,7 +360,7 @@ document.getElementById('gl-save').addEventListener('click', () => {
   const host = glHostInput.value.trim() || 'gitlab.com';
 
   if (host !== 'gitlab.com') {
-    chrome.permissions.request({ origins: [`*://${host}/*`] }, async (granted) => {
+    chrome.permissions.request({ origins: [`https://${host}/*`] }, async (granted) => {
       if (!granted) {
         showGlStatus('Host permission denied. The extension cannot run on ' + host + ' without it.', 'error');
         return;

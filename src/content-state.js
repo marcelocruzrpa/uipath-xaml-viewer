@@ -28,7 +28,7 @@ window.UXV = (() => {
   const parseGitHubUrl = window.UiPathUtils.parseGitHubUrl;
 
   function parsePageUrl() {
-    return UXV.platform?.parsePageUrl?.() ?? parseGitHubUrl();
+    return window.UXV.platform?.parsePageUrl?.() ?? parseGitHubUrl();
   }
   const findById = window.UiPathUtils.findInTree;
 
