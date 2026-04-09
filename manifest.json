@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "UiPath XAML Viewer for GitHub",
-  "version": "1.0.1",
-  "description": "Instantly visualize UiPath workflow XAML files as interactive diagrams on GitHub.",
+  "name": "UiPath XAML Viewer",
+  "version": "1.1.0",
+  "description": "Instantly visualize UiPath workflow XAML files as interactive diagrams on GitHub and GitLab.",
   "author": "Marcelo Cruz",
   "permissions": ["storage", "scripting"],
   "background": {
@@ -10,14 +10,15 @@
   },
   "host_permissions": [
     "*://github.com/*",
-    "*://raw.githubusercontent.com/*"
+    "*://raw.githubusercontent.com/*",
+    "*://gitlab.com/*"
   ],
   "optional_host_permissions": [
     "https://*/*"
   ],
   "content_scripts": [
     {
-      "matches": ["*://github.com/*"],
+      "matches": ["*://github.com/*", "*://gitlab.com/*"],
       "js": [
         "lib/dagre.min.js",
         "src/utils.js",
@@ -29,6 +30,7 @@
         "src/content-search.js",
         "src/content-state.js",
         "src/content-github.js",
+        "src/content-gitlab.js",
         "src/content-viewer.js",
         "src/content-interactions.js",
         "src/content.js"

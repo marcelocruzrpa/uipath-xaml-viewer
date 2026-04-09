@@ -4,7 +4,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 require('../src/utils.js');
-const { parseGitHubUrl, getApiBase, getRawBase } = window.UiPathUtils;
+const { parseGitHubUrl, getApiBase, getRawBase, looksLikeXaml } = window.UiPathUtils;
 
 /* ------------------------------------------------------------------ */
 /*  getApiBase / getRawBase                                           */
@@ -27,6 +27,30 @@ describe('getRawBase', () => {
 
   it('returns hostname for GHE hosts', () => {
     expect(getRawBase('github.mycompany.com')).toBe('https://github.mycompany.com');
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  looksLikeXaml                                                     */
+/* ------------------------------------------------------------------ */
+
+describe('looksLikeXaml', () => {
+  it('returns true for UiPath XAML with Activity root', () => {
+    expect(looksLikeXaml('<Activity xmlns="http://schemas.uipath.com">')).toBe(true);
+  });
+
+  it('returns true for XAML with Sequence root', () => {
+    expect(looksLikeXaml('<Sequence DisplayName="Main">')).toBe(true);
+  });
+
+  it('returns false for plain HTML', () => {
+    expect(looksLikeXaml('<html><body>Hello</body></html>')).toBe(false);
+  });
+
+  it('returns false for null/undefined', () => {
+    expect(looksLikeXaml(null)).toBeFalsy();
+    expect(looksLikeXaml(undefined)).toBeFalsy();
+    expect(looksLikeXaml('')).toBeFalsy();
   });
 });
 
@@ -218,5 +242,103 @@ describe('parseGitHubUrl', () => {
     const ctx = parseGitHubUrl();
     expect(ctx).not.toBeNull();
     expect(ctx.ref).toBe('main');
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  getGitLabApiBase                                                  */
+/* ------------------------------------------------------------------ */
+
+const { getGitLabApiBase, parseGitLabUrl } = window.UiPathUtils;
+
+describe('getGitLabApiBase', () => {
+  it('returns /api/v4 for gitlab.com', () => {
+    expect(getGitLabApiBase('gitlab.com')).toBe('https://gitlab.com/api/v4');
+  });
+
+  it('returns /api/v4 for self-hosted instances', () => {
+    expect(getGitLabApiBase('gitlab.mycompany.com')).toBe('https://gitlab.mycompany.com/api/v4');
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  parseGitLabUrl                                                    */
+/* ------------------------------------------------------------------ */
+
+describe('parseGitLabUrl', () => {
+  function setPathname(path) {
+    Object.defineProperty(window, 'location', {
+      value: { ...window.location, pathname: path, hostname: 'gitlab.com' },
+      writable: true,
+      configurable: true,
+    });
+  }
+
+  it('returns null for non-blob GitLab URLs', () => {
+    setPathname('/group/project');
+    expect(parseGitLabUrl()).toBeNull();
+  });
+
+  it('returns null for non-GitLab-style URLs (no /-/)', () => {
+    setPathname('/owner/repo/blob/main/file.xaml');
+    expect(parseGitLabUrl()).toBeNull();
+  });
+
+  it('parses simple project blob URL', () => {
+    setPathname('/group/project/-/blob/main/src/Main.xaml');
+    const ctx = parseGitLabUrl();
+    expect(ctx).not.toBeNull();
+    expect(ctx.owner).toBe('group/project');
+    expect(ctx.repo).toBe('');
+    expect(ctx.view).toBe('blob');
+    expect(ctx.ref).toBe('main');
+    expect(ctx.filePath).toBe('src/Main.xaml');
+    expect(ctx.dir).toBe('src');
+  });
+
+  it('parses nested subgroup URL', () => {
+    setPathname('/group/subgroup/project/-/blob/develop/workflows/Process.xaml');
+    const ctx = parseGitLabUrl();
+    expect(ctx).not.toBeNull();
+    expect(ctx.owner).toBe('group/subgroup/project');
+    expect(ctx.ref).toBe('develop');
+    expect(ctx.filePath).toBe('workflows/Process.xaml');
+    expect(ctx.dir).toBe('workflows');
+  });
+
+  it('parses blame view', () => {
+    setPathname('/group/project/-/blame/main/file.xaml');
+    const ctx = parseGitLabUrl();
+    expect(ctx).not.toBeNull();
+    expect(ctx.view).toBe('blame');
+  });
+
+  it('parses tree view', () => {
+    setPathname('/group/project/-/tree/main/src');
+    const ctx = parseGitLabUrl();
+    expect(ctx).not.toBeNull();
+    expect(ctx.view).toBe('tree');
+    expect(ctx.filePath).toBe('src');
+  });
+
+  it('handles file at root level (no dir)', () => {
+    setPathname('/group/project/-/blob/main/Main.xaml');
+    const ctx = parseGitLabUrl();
+    expect(ctx).not.toBeNull();
+    expect(ctx.filePath).toBe('Main.xaml');
+    expect(ctx.dir).toBe('');
+  });
+
+  it('reads ref from data-ref attribute when available', () => {
+    setPathname('/group/project/-/blob/feature/my-branch/src/Main.xaml');
+    const el = document.createElement('div');
+    el.setAttribute('data-ref', 'feature/my-branch');
+    document.body.appendChild(el);
+
+    const ctx = parseGitLabUrl();
+    expect(ctx.ref).toBe('feature/my-branch');
+    expect(ctx.filePath).toBe('src/Main.xaml');
+
+    document.body.removeChild(el);
   });
 });

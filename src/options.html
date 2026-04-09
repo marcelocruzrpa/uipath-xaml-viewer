@@ -102,52 +102,93 @@
     <h2>General</h2>
     <label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:13px;color:#24292f;cursor:pointer">
       <input type="checkbox" id="auto-visualize" style="width:16px;height:16px;accent-color:#FA4616;cursor:pointer">
-      Automatically visualize XAML files on GitHub
+      Automatically visualize XAML files
     </label>
     <p style="margin-top:4px">When enabled, the diagram viewer opens automatically on <code>.xaml</code> file pages.</p>
   </div>
 
   <div class="section">
-    <h2>GitHub Personal Access Token</h2>
-    <p>
-      A token increases the GitHub API rate limit from 60 to 5,000 requests per hour and is required for private repositories.
-      The token is stored locally in this browser profile only and is not synced across devices.
-    </p>
-    <p>
-      Prefer the smallest scope that works for your repos. Fine-grained tokens are recommended when possible.
-    </p>
-    <p>
-      <a class="help-link" href="https://github.com/settings/tokens" target="_blank" rel="noopener">
-        - Manage tokens on GitHub
-      </a>
-    </p>
-
-    <label for="host">GitHub Instance</label>
-    <input type="text" id="host" placeholder="github.com" value="github.com">
-    <p style="font-size:11px;color:#656d76;margin-bottom:8px">
-      Enter the hostname of your GitHub instance (e.g., github.mycompany.com).
-    </p>
-    <button class="btn-secondary" id="add-host" style="margin-bottom:12px;font-size:12px;padding:4px 12px">Register GHE Host</button>
-    <p style="font-size:11px;color:#656d76;margin-bottom:12px">
-      Registering a host enables the extension on that instance. A token is optional (only needed for private repos or higher rate limits).
-    </p>
-
-    <div id="ghe-host-list" style="margin-bottom:16px;padding:8px;background:#fff;border:1px solid #d1d5da;border-radius:6px"></div>
-
-    <label for="token">Token (optional for public repos)</label>
-    <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false">
-
-    <div class="btn-row">
-      <button class="btn-primary" id="save">Save Token</button>
-      <button class="btn-secondary" id="test">Test Connection</button>
-      <button class="btn-danger" id="clear">Clear</button>
+    <h2>Platform</h2>
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <button class="btn-primary" id="platform-github" style="min-width:100px">GitHub</button>
+      <button class="btn-secondary" id="platform-gitlab" style="min-width:100px">GitLab</button>
     </div>
 
-    <div class="status" id="status"></div>
+    <div id="github-section">
+      <h2>GitHub Personal Access Token</h2>
+      <p>
+        A token increases the GitHub API rate limit from 60 to 5,000 requests per hour and is required for private repositories.
+        The token is stored locally in this browser profile only and is not synced across devices.
+      </p>
+      <p>
+        <a class="help-link" href="https://github.com/settings/tokens" target="_blank" rel="noopener">
+          - Manage tokens on GitHub
+        </a>
+      </p>
 
-    <div class="rate-info" id="rate-info" style="display:none">
-      <strong>API Rate Limit:</strong>
-      <span id="rate-remaining">-</span> / <span id="rate-limit">-</span> remaining
+      <label for="host">GitHub Instance</label>
+      <input type="text" id="host" placeholder="github.com" value="github.com">
+      <p style="font-size:11px;color:#656d76;margin-bottom:8px">
+        Enter the hostname of your GitHub instance (e.g., github.mycompany.com).
+      </p>
+      <button class="btn-secondary" id="add-host" style="margin-bottom:12px;font-size:12px;padding:4px 12px">Register GHE Host</button>
+      <p style="font-size:11px;color:#656d76;margin-bottom:12px">
+        Registering a host enables the extension on that instance. A token is optional (only needed for private repos or higher rate limits).
+      </p>
+
+      <div id="ghe-host-list" style="margin-bottom:16px;padding:8px;background:#fff;border:1px solid #d1d5da;border-radius:6px"></div>
+
+      <label for="token">Token (optional for public repos)</label>
+      <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false">
+
+      <div class="btn-row">
+        <button class="btn-primary" id="save">Save Token</button>
+        <button class="btn-secondary" id="test">Test Connection</button>
+        <button class="btn-danger" id="clear">Clear</button>
+      </div>
+
+      <div class="status" id="status"></div>
+
+      <div class="rate-info" id="rate-info" style="display:none">
+        <strong>API Rate Limit:</strong>
+        <span id="rate-remaining">-</span> / <span id="rate-limit">-</span> remaining
+      </div>
+    </div>
+
+    <div id="gitlab-section" style="display:none">
+      <h2>GitLab Personal Access Token</h2>
+      <p>
+        A token is required for private repositories and increases API rate limits.
+        Create a token with <code>read_api</code> scope. The token is stored locally only.
+      </p>
+      <p>
+        <a class="help-link" href="https://gitlab.com/-/user_settings/personal_access_tokens" target="_blank" rel="noopener">
+          - Manage tokens on GitLab
+        </a>
+      </p>
+
+      <label for="gl-host">GitLab Instance</label>
+      <input type="text" id="gl-host" placeholder="gitlab.com" value="gitlab.com">
+      <p style="font-size:11px;color:#656d76;margin-bottom:8px">
+        Enter the hostname of your GitLab instance (e.g., gitlab.mycompany.com).
+      </p>
+      <button class="btn-secondary" id="add-gl-host" style="margin-bottom:12px;font-size:12px;padding:4px 12px">Register GitLab Host</button>
+      <p style="font-size:11px;color:#656d76;margin-bottom:12px">
+        Registering a host enables the extension on that instance. A token is optional for public projects.
+      </p>
+
+      <div id="gitlab-host-list" style="margin-bottom:16px;padding:8px;background:#fff;border:1px solid #d1d5da;border-radius:6px"></div>
+
+      <label for="gl-token">Token (optional for public projects)</label>
+      <input type="password" id="gl-token" placeholder="glpat-xxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false">
+
+      <div class="btn-row">
+        <button class="btn-primary" id="gl-save">Save Token</button>
+        <button class="btn-secondary" id="gl-test">Test Connection</button>
+        <button class="btn-danger" id="gl-clear">Clear</button>
+      </div>
+
+      <div class="status" id="gl-status"></div>
     </div>
   </div>
 

@@ -6,6 +6,7 @@ window.UiPathFetch = (() => {
 
   const getApiBase = window.UiPathUtils.getApiBase;
   const getRawBase = window.UiPathUtils.getRawBase;
+  const getGitLabApiBase = window.UiPathUtils.getGitLabApiBase;
 
   const CACHE_MAX = 200;
   const cache = new Map();
@@ -122,7 +123,77 @@ window.UiPathFetch = (() => {
     return fetchText(rawUrl, true);
   }
 
+  async function getGitLabToken() {
+    try {
+      const host = location.hostname;
+      const result = await chrome.storage.local.get([`gitlab_token_${host}`, 'gitlab_token']);
+      return result[`gitlab_token_${host}`] || result.gitlab_token || null;
+    } catch (_e) {
+      return null;
+    }
+  }
+
+  async function gitlabApiGet(url) {
+    if (cache.has(url)) return cache.get(url);
+
+    const token = await getGitLabToken();
+    const headers = {};
+    if (token) headers['Private-Token'] = token;
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+    const response = await fetch(url, { headers, signal: controller.signal });
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        cacheSet(url, null);
+        return null;
+      }
+      throw new Error(`GitLab API ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    cacheSet(url, data);
+    return data;
+  }
+
+  async function gitlabFetchText(url) {
+    const headers = {};
+    const token = await getGitLabToken();
+    if (token) headers['Private-Token'] = token;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+    try {
+      const response = await fetch(url, { headers, signal: controller.signal });
+      clearTimeout(timeoutId);
+      return response.ok ? response.text() : null;
+    } catch (_e) {
+      clearTimeout(timeoutId);
+      return null;
+    }
+  }
+
+  async function fetchFileAtRefGitLab(projectPath, ref, filePath) {
+    if (!ref) return null;
+
+    const encodedProject = encodeURIComponent(projectPath);
+    const encodedPath = encodeURIComponent(filePath);
+    const apiUrl = `${getGitLabApiBase()}/projects/${encodedProject}/repository/files/${encodedPath}/raw?ref=${encodeURIComponent(ref)}`;
+
+    try {
+      const text = await gitlabFetchText(apiUrl);
+      if (text) return text;
+    } catch (e) {
+      console.warn('[UXV] GitLab API failed for', filePath, '@', ref, ':', e.message);
+    }
+
+    // Fallback: raw URL
+    const rawUrl = `${location.origin}/${projectPath}/-/raw/${ref}/${filePath}`;
+    return gitlabFetchText(rawUrl);
+  }
+
   function clearCache() { cache.clear(); }
 
-  return { getToken, apiGet, fetchText, fetchFileAtRef, decodeBase64Utf8, clearCache };
+  return { getToken, getGitLabToken, apiGet, gitlabApiGet, fetchText, gitlabFetchText, fetchFileAtRef, fetchFileAtRefGitLab, decodeBase64Utf8, clearCache };
 })();

@@ -1,6 +1,6 @@
 /**
  * UiPath XAML Diff Viewer v2
- * Uses the GitHub REST API for SHA resolution and authenticated file fetching.
+ * Uses the GitHub/GitLab REST APIs for SHA resolution and authenticated file fetching.
  */
 window.UiPathDiff = (() => {
 
@@ -8,11 +8,26 @@ window.UiPathDiff = (() => {
   const DIFF_VIEWER_CLASS = 'uxv-diff-viewer';
   const getApiBase = window.UiPathUtils.getApiBase;
   const getRawBase = window.UiPathUtils.getRawBase;
+  const getGitLabApiBase = window.UiPathUtils.getGitLabApiBase;
 
   const apiGet = window.UiPathFetch.apiGet;
   const fetchFileAtRef = window.UiPathFetch.fetchFileAtRef;
+  const gitlabApiGet = window.UiPathFetch.gitlabApiGet;
+  const fetchFileAtRefGitLab = window.UiPathFetch.fetchFileAtRefGitLab;
 
   function apiBase() { return getApiBase(); }
+  function gitlabApiBase() { return getGitLabApiBase(); }
+
+  function isGitLabContext() {
+    return !!window.UXV?.gitlab?.isGitLabPage?.();
+  }
+
+  function platformFetchFile(ownerRepo, ref, path) {
+    if (ownerRepo.isGitLab) {
+      return fetchFileAtRefGitLab(ownerRepo.projectPath, ref, path);
+    }
+    return fetchFileAtRef(ownerRepo.owner, ownerRepo.repo, ref, path);
+  }
   const diffCtrls = new Map();
 
   const esc = window.UiPathUtils.esc;
@@ -97,20 +112,69 @@ window.UiPathDiff = (() => {
 
   function isDiffPage() {
     const path = location.pathname;
-    return /\/commit\//.test(path)
-      || /\/pull\/\d+\/(files|commits?)/.test(path)
-      || /\/compare\//.test(path);
+    // GitHub patterns
+    if (/\/commit\//.test(path) || /\/pull\/\d+\/(files|commits?)/.test(path) || /\/compare\//.test(path)) return true;
+    // GitLab patterns (note the /-/ separator)
+    if (/\/-\/commit\//.test(path) || /\/-\/merge_requests\/\d+\/diffs/.test(path) || /\/-\/compare\//.test(path)) return true;
+    return false;
   }
 
   function getOwnerRepo() {
+    // GitLab: everything before /-/ is the project path
+    const glMatch = location.pathname.match(/^\/(.+?)\/-\//);
+    if (glMatch && isGitLabContext()) {
+      return { owner: glMatch[1], repo: '', projectPath: glMatch[1], isGitLab: true };
+    }
+    // GitHub
     const match = location.pathname.match(/^\/([^/]+)\/([^/]+)/);
     return match ? { owner: match[1], repo: match[2] } : null;
+  }
+
+  async function getGitLabParentSha(projectPath, sha) {
+    const encoded = encodeURIComponent(projectPath);
+    const data = await gitlabApiGet(`${gitlabApiBase()}/projects/${encoded}/repository/commits/${sha}`);
+    if (!data) throw new Error(`Commit ${sha.slice(0, 7)} not found`);
+    return data.parent_ids && data.parent_ids.length > 0 ? data.parent_ids[0] : null;
+  }
+
+  async function getGitLabMrRefs(projectPath, mrIid) {
+    const encoded = encodeURIComponent(projectPath);
+    const data = await gitlabApiGet(`${gitlabApiBase()}/projects/${encoded}/merge_requests/${mrIid}`);
+    if (!data) throw new Error(`MR !${mrIid} not found`);
+    return {
+      base: data.diff_refs.base_sha,
+      head: data.diff_refs.head_sha,
+    };
   }
 
   async function resolveRefs() {
     const path = location.pathname;
     const ownerRepo = getOwnerRepo();
     if (!ownerRepo) return null;
+
+    if (ownerRepo.isGitLab) {
+      const projectPath = ownerRepo.projectPath;
+
+      const glCommitMatch = path.match(/\/-\/commit\/([a-f0-9]{7,40})/);
+      if (glCommitMatch) {
+        const head = glCommitMatch[1];
+        const base = await getGitLabParentSha(projectPath, head);
+        return { ...ownerRepo, base, head };
+      }
+
+      const glMrMatch = path.match(/\/-\/merge_requests\/(\d+)/);
+      if (glMrMatch) {
+        const refs = await getGitLabMrRefs(projectPath, parseInt(glMrMatch[1], 10));
+        return { ...ownerRepo, base: refs.base, head: refs.head };
+      }
+
+      const glCompareMatch = path.match(/\/-\/compare\/(.+?)\.{2,3}(.+)/);
+      if (glCompareMatch) {
+        return { ...ownerRepo, base: glCompareMatch[1], head: glCompareMatch[2] };
+      }
+
+      return null;
+    }
 
     const { owner, repo } = ownerRepo;
     const commitMatch = path.match(/\/commit\/([a-f0-9]{7,40})/);
@@ -136,13 +200,21 @@ window.UiPathDiff = (() => {
 
   function findXamlDiffBlocks() {
     const blocks = [];
-    const fileEls = document.querySelectorAll('[data-tagsearch-path], .file, [data-file-type=".xaml"], copilot-diff-entry');
+    const fileEls = document.querySelectorAll(
+      // GitHub selectors
+      '[data-tagsearch-path], .file, [data-file-type=".xaml"], copilot-diff-entry,'
+      // GitLab selectors
+      + '.diff-file, .diff-files-holder .file-holder'
+    );
 
     for (const el of fileEls) {
       const path = el.getAttribute('data-tagsearch-path')
         || el.querySelector('.file-header [title]')?.getAttribute('title')
         || el.querySelector('[data-path]')?.getAttribute('data-path')
         || el.querySelector('.file-info a')?.textContent?.trim()
+        // GitLab path selectors
+        || el.querySelector('.file-title-name')?.textContent?.trim()
+        || el.getAttribute('data-blob-diff-path')?.replace(/.*\//, '')
         || '';
 
       if (!path.endsWith('.xaml')) continue;
@@ -157,7 +229,7 @@ window.UiPathDiff = (() => {
 
       // Fallback: parse "old → new" from header text
       if (!oldPath) {
-        const headerText = el.querySelector('.file-header .file-info, .file-header [title]')?.textContent || '';
+        const headerText = el.querySelector('.file-header .file-info, .file-header [title], .file-title-name')?.textContent || '';
         const arrowMatch = headerText.match(/(.+\.xaml)\s*→\s*/);
         if (arrowMatch) oldPath = arrowMatch[1].trim();
       }
@@ -434,7 +506,7 @@ window.UiPathDiff = (() => {
     if (!isDiffPage()) return;
 
     for (const { el, path, oldPath } of findXamlDiffBlocks()) {
-      const header = el.querySelector('.file-header, .js-file-header, [class*="fileHeader"]');
+      const header = el.querySelector('.file-header, .js-file-header, [class*="fileHeader"], .file-header-content, .diff-file-header');
       if (!header) continue;
 
       const btn = document.createElement('button');
@@ -454,7 +526,7 @@ window.UiPathDiff = (() => {
         await showDiff(el, btn, path, oldPath);
       });
 
-      const actions = header.querySelector('.file-actions, [class*="fileActions"], .BtnGroup');
+      const actions = header.querySelector('.file-actions, [class*="fileActions"], .BtnGroup, .diff-file-actions, .file-header-content .btn-group');
       if (actions) actions.prepend(btn);
       else header.appendChild(btn);
     }
@@ -566,18 +638,17 @@ window.UiPathDiff = (() => {
         throw new Error('Could not determine base/head commits for this page.');
       }
 
-      const { owner, repo, base, head } = refs;
       btn.innerHTML = '<span class="uxv-spinner"></span> Fetching files...';
 
       const [oldXaml, newXaml] = await Promise.all([
-        base ? fetchFileAtRef(owner, repo, base, oldPath || path) : Promise.resolve(null),
-        fetchFileAtRef(owner, repo, head, path),
+        refs.base ? platformFetchFile(refs, refs.base, oldPath || path) : Promise.resolve(null),
+        platformFetchFile(refs, refs.head, path),
       ]);
 
       const oldExists = !!oldXaml;
       const newExists = !!newXaml;
       if (!oldExists && !newExists) {
-        throw new Error('Could not fetch either version of the file. Configure a GitHub token for private repos or rate-limited sessions.');
+        throw new Error('Could not fetch either version of the file. Configure an access token for private repos or rate-limited sessions.');
       }
 
       btn.innerHTML = '<span class="uxv-spinner"></span> Analyzing diff...';
@@ -732,7 +803,7 @@ window.UiPathDiff = (() => {
         }
       }
 
-      const diffTable = fileEl.querySelector('.js-file-content, [class*="fileContents"], .blob-wrapper, table.diff-table');
+      const diffTable = fileEl.querySelector('.js-file-content, [class*="fileContents"], .blob-wrapper, table.diff-table, .diff-content, .diff-viewer');
       if (diffTable) diffTable.parentElement.insertBefore(viewer, diffTable.nextSibling);
       else fileEl.appendChild(viewer);
 
@@ -794,7 +865,7 @@ window.UiPathDiff = (() => {
       return;
     }
 
-    const header = el.querySelector('.file-header, [class*="fileHeader"], copilot-diff-entry') || el;
+    const header = el.querySelector('.file-header, [class*="fileHeader"], copilot-diff-entry, .file-header-content, .diff-file-header') || el;
     const loading = document.createElement('span');
     loading.className = 'uxv-diff-inline-summary uxv-diff-inline-loading';
     loading.textContent = '⋯';
@@ -803,8 +874,8 @@ window.UiPathDiff = (() => {
     enqueueSummary(async () => {
       try {
         const [oldXaml, newXaml] = await Promise.all([
-          fetchFileAtRef(refs.owner, refs.repo, refs.base, oldPath || path),
-          fetchFileAtRef(refs.owner, refs.repo, refs.head, path),
+          platformFetchFile(refs, refs.base, oldPath || path),
+          platformFetchFile(refs, refs.head, path),
         ]);
         loading.remove();
         if (!oldXaml && !newXaml) return;
@@ -857,7 +928,7 @@ window.UiPathDiff = (() => {
 
   function insertSummaryBadge(el, counts) {
     if (!counts || (counts.added === 0 && counts.modified === 0 && counts.removed === 0)) return;
-    const header = el.querySelector('.file-header, [class*="fileHeader"], copilot-diff-entry');
+    const header = el.querySelector('.file-header, [class*="fileHeader"], copilot-diff-entry, .file-header-content, .diff-file-header');
     const target = header || el;
     if (target.querySelector('.uxv-diff-inline-summary')) return;
     const badge = document.createElement('span');
