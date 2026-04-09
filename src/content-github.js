@@ -18,27 +18,8 @@
     return /\.xaml$/i.test(location.pathname) && /\/(blob|blame)\//.test(location.pathname);
   }
 
-  function looksLikeXaml(text) {
-    return text
-      && typeof text === 'string'
-      && text.trim().startsWith('<')
-      && /(<Activity |<Sequence |<Flowchart |<StateMachine |xmlns.*uipath|xmlns.*xaml\/activities)/i.test(text.trim());
-  }
-
-  async function tryFetch(url) {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000);
-      const response = await fetch(url, { signal: controller.signal });
-      clearTimeout(timeoutId);
-      if (!response.ok) return null;
-      const text = await response.text();
-      return looksLikeXaml(text) ? text : null;
-    } catch (e) {
-      console.warn('[UXV] Fetch failed for', url, e.message);
-      return null;
-    }
-  }
+  const looksLikeXaml = window.UiPathUtils.looksLikeXaml;
+  const tryFetch = window.UiPathUtils.tryFetch;
 
   function findRawLink() {
     return document.querySelector('a[data-testid="raw-button"], a[href*="/raw/"]');
@@ -308,6 +289,14 @@
     document.addEventListener('turbo:render', () => setTimeout(checkPage, 500));
   }
 
+  function parsePageUrl() {
+    return window.UiPathUtils.parseGitHubUrl();
+  }
+
+  function buildFileUrl(ctx, filePath) {
+    return `/${ctx.owner}/${ctx.repo}/blob/${ctx.ref}/${filePath}`;
+  }
+
   // Expose on UXV namespace
   UXV.github = {
     isGitHubPage,
@@ -328,5 +317,7 @@
     svgIcon,
     checkPage,
     startObserver,
+    parsePageUrl,
+    buildFileUrl,
   };
 })();

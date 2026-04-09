@@ -8,7 +8,7 @@
   const htmlEscape = UXV.htmlEscape;
   const findById = UXV.findById;
   const byDataId = UXV.byDataId;
-  const parseGitHubUrl = UXV.parseGitHubUrl;
+  const parsePageUrl = UXV.parsePageUrl;
   const BUTTON_ID = UXV.BUTTON_ID;
   const VIEWER_ID = UXV.VIEWER_ID;
   const CANVAS_PADDING = UXV.CANVAS_PADDING;
@@ -18,14 +18,14 @@
 
   function resetBtn(btn) {
     if (!btn) return;
-    btn.innerHTML = UXV.github.svgIcon('chart') + ' Visualize XAML';
+    btn.innerHTML = UXV.platform.svgIcon('chart') + ' Visualize XAML';
     btn.disabled = false;
     btn.classList.remove('uxv-btn-active');
   }
 
   function cleanupViewerState() {
     document.getElementById(VIEWER_ID)?.remove();
-    UXV.github.showCode(true);
+    UXV.platform.showCode(true);
     if (state.panZoomCtrl) {
       state.panZoomCtrl.ac.abort();
       state.panZoomCtrl = null;
@@ -101,7 +101,7 @@
         <strong>${htmlEscape(title)}</strong>
         <div>${htmlEscape(message)}</div>
       </div>`;
-    const codeEl = UXV.github.findCode();
+    const codeEl = UXV.platform.findCode();
     const parent = codeEl?.parentElement || document.querySelector('main');
     if (parent) {
       if (codeEl) codeEl.parentElement.insertBefore(viewer, codeEl.nextSibling);
@@ -294,7 +294,7 @@
     });
     summaryHtml += `</table>`;
 
-    const ctx = parseGitHubUrl();
+    const ctx = parsePageUrl();
     const filePath = ctx ? ctx.filePath : '';
 
     const html = `<!DOCTYPE html>
@@ -354,7 +354,7 @@ ${outlineHtml}
   }
 
   async function showBranchCompare(viewer) {
-    const ctx = parseGitHubUrl();
+    const ctx = parsePageUrl();
     if (!ctx) return;
     const branch = prompt('Enter branch name to compare against (e.g. main, develop):');
     if (!branch || !branch.trim()) return;
@@ -365,7 +365,9 @@ ${outlineHtml}
     canvas.innerHTML = '<div class="uxv-status-info" style="padding:20px;text-align:center"><span class="uxv-spinner"></span> Fetching branch version...</div>';
 
     try {
-      const otherXaml = await window.UiPathFetch.fetchFileAtRef(ctx.owner, ctx.repo, branchRef, ctx.filePath);
+      const otherXaml = ctx.repo
+        ? await window.UiPathFetch.fetchFileAtRef(ctx.owner, ctx.repo, branchRef, ctx.filePath)
+        : await window.UiPathFetch.fetchFileAtRefGitLab(ctx.owner, branchRef, ctx.filePath);
       if (!otherXaml) { canvas.innerHTML = '<div class="uxv-status-error" style="padding:20px">Could not fetch file from branch "' + htmlEscape(branchRef) + '".</div>'; return; }
       const otherParsed = window.UiPathParser.parse(otherXaml);
       if (otherParsed.error) { canvas.innerHTML = '<div class="uxv-status-error" style="padding:20px">' + htmlEscape(otherParsed.error) + '</div>'; return; }
@@ -479,7 +481,7 @@ ${outlineHtml}
         <div class="uxv-panel-resizer" id="uxv-panel-resizer"></div><div class="uxv-panel" id="uxv-panel">${rendered.panelHtml}</div>
       </div>`;
 
-    const codeEl = UXV.github.findCode();
+    const codeEl = UXV.platform.findCode();
     const parent = codeEl?.parentElement || document.querySelector('main');
     if (parent) {
       if (codeEl) codeEl.parentElement.insertBefore(viewer, codeEl.nextSibling);
@@ -520,7 +522,7 @@ ${outlineHtml}
     }
 
     try {
-      const xaml = await UXV.github.fetchXaml();
+      const xaml = await UXV.platform.fetchXaml();
       if (!xaml) {
         renderMessageViewer('UiPath XAML Viewer', 'Could not retrieve XAML from this GitHub view. The page layout may have changed or the raw file is unavailable.');
         resetBtn(btn);
@@ -542,9 +544,9 @@ ${outlineHtml}
       await new Promise((r) => setTimeout(r, 0));
 
       renderViewer();
-      UXV.github.showCode(false);
+      UXV.platform.showCode(false);
       if (btn) {
-        btn.innerHTML = UXV.github.svgIcon('code') + ' Show Code';
+        btn.innerHTML = UXV.platform.svgIcon('code') + ' Show Code';
         btn.disabled = false;
         btn.classList.add('uxv-btn-active');
       }

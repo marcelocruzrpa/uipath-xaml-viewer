@@ -26,6 +26,10 @@ window.UXV = (() => {
 
   const htmlEscape = window.UiPathUtils.escHtml;
   const parseGitHubUrl = window.UiPathUtils.parseGitHubUrl;
+
+  function parsePageUrl() {
+    return UXV.platform?.parsePageUrl?.() ?? parseGitHubUrl();
+  }
   const findById = window.UiPathUtils.findInTree;
 
   function byDataId(root, id) {
@@ -43,11 +47,14 @@ window.UXV = (() => {
     state,
     htmlEscape,
     parseGitHubUrl,
+    parsePageUrl,
     findById,
     byDataId,
     allByDataId,
     // Cross-module function references (set by other modules during init)
+    platform: {},
     github: {},
+    gitlab: {},
     viewer: {},
     interactions: {},
   };

@@ -8,7 +8,7 @@
   const htmlEscape = UXV.htmlEscape;
   const findById = UXV.findById;
   const byDataId = UXV.byDataId;
-  const parseGitHubUrl = UXV.parseGitHubUrl;
+  const parsePageUrl = UXV.parsePageUrl;
   const CANVAS_PADDING = UXV.CANVAS_PADDING;
 
   // Search functions from content-search.js module
@@ -276,7 +276,7 @@
       const workflowFile = found.properties?.WorkflowFileName;
       if (!workflowFile) return;
 
-      const ctx = parseGitHubUrl();
+      const ctx = parsePageUrl();
       if (!ctx) return;
 
       const crumbs = getBreadcrumbs();
@@ -284,7 +284,7 @@
       setBreadcrumbs(crumbs);
 
       const resolvedPath = resolveWorkflowPath(workflowFile, ctx.dir);
-      const target = `/${ctx.owner}/${ctx.repo}/blob/${ctx.ref}/${resolvedPath}#uxv-auto`;
+      const target = (UXV.platform.buildFileUrl?.(ctx, resolvedPath) || `/${ctx.owner}/${ctx.repo}/blob/${ctx.ref}/${resolvedPath}`) + '#uxv-auto';
       window.open(target, '_blank');
     });
   }
@@ -331,7 +331,7 @@
       if (currentHover === nodeEl.dataset.id) return;
       currentHover = nodeEl.dataset.id;
 
-      const ctx = parseGitHubUrl();
+      const ctx = parsePageUrl();
       if (!ctx) return;
       const dir = ctx.filePath.split('/').slice(0, -1).join('/');
       const resolved = resolveWorkflowPath(workflowFile, dir);
@@ -343,7 +343,9 @@
         return;
       }
 
-      const xaml = await window.UiPathFetch.fetchFileAtRef(ctx.owner, ctx.repo, ctx.ref, resolved);
+      const xaml = ctx.repo
+        ? await window.UiPathFetch.fetchFileAtRef(ctx.owner, ctx.repo, ctx.ref, resolved)
+        : await window.UiPathFetch.fetchFileAtRefGitLab(ctx.owner, ctx.ref, resolved);
       if (!xaml) { setInvokeCache(cacheKey, ''); return; }
       const parsed = window.UiPathParser.parse(xaml);
       if (parsed.error) { setInvokeCache(cacheKey, ''); return; }
@@ -378,13 +380,13 @@
       const isInvoke = found.type === 'InvokeWorkflowFile' || found.activityType === 'InvokeWorkflowFile';
       if (isInvoke && found.properties?.WorkflowFileName) {
         items.push({ label: 'Open referenced workflow', icon: '→', action: () => {
-          const ctx = parseGitHubUrl();
+          const ctx = parsePageUrl();
           if (!ctx) return;
           const crumbs = getBreadcrumbs();
           crumbs.push({ name: state.currentParsed.name || 'Workflow', url: location.pathname });
           setBreadcrumbs(crumbs);
           const resolvedPath = resolveWorkflowPath(found.properties.WorkflowFileName, ctx.dir);
-          window.open(`/${ctx.owner}/${ctx.repo}/blob/${ctx.ref}/${resolvedPath}`, '_blank');
+          window.open(UXV.platform.buildFileUrl?.(ctx, resolvedPath) || `/${ctx.owner}/${ctx.repo}/blob/${ctx.ref}/${resolvedPath}`, '_blank');
         }});
       }
       items.push({ label: 'Copy activity name', icon: '⊡', action: () => {

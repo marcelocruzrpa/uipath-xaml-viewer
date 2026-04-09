@@ -131,5 +131,70 @@ window.UiPathUtils = (() => {
     return { owner, repo, view, ref, filePath, dir };
   }
 
-  return { esc, escHtml, findInTree, getApiBase, getRawBase, parseGitHubUrl };
+  /**
+   * Return the GitLab API v4 base URL for a given hostname.
+   */
+  function getGitLabApiBase(hostname) {
+    if (!hostname) hostname = location.hostname;
+    return `https://${hostname}/api/v4`;
+  }
+
+  /**
+   * Check whether a string looks like UiPath XAML content.
+   */
+  function looksLikeXaml(text) {
+    return text
+      && typeof text === 'string'
+      && text.trim().startsWith('<')
+      && /(<Activity |<Sequence |<Flowchart |<StateMachine |xmlns.*uipath|xmlns.*xaml\/activities)/i.test(text.trim());
+  }
+
+  /**
+   * Fetch a URL and return the body text if it looks like XAML, else null.
+   */
+  async function tryFetch(url) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
+      const response = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      if (!response.ok) return null;
+      const text = await response.text();
+      return looksLikeXaml(text) ? text : null;
+    } catch (e) {
+      console.warn('[UXV] Fetch failed for', url, e.message);
+      return null;
+    }
+  }
+
+  /**
+   * Parse the current GitLab page URL into { owner, repo, view, ref, filePath, dir }.
+   * GitLab URLs use /-/ as separator: /group/subgroup/project/-/blob/branch/path/file
+   * owner contains the full project path (may include subgroups).
+   */
+  function parseGitLabUrl() {
+    const match = location.pathname.match(/^\/(.+?)\/-\/(blob|tree|blame)\/(.+)/);
+    if (!match) return null;
+    const [, projectPath, view, rest] = match;
+
+    // Try to read ref from GitLab's data-ref attribute
+    const dataRef = document.querySelector('[data-ref]')?.getAttribute('data-ref');
+    if (dataRef && rest.startsWith(dataRef + '/')) {
+      const filePath = rest.slice(dataRef.length + 1);
+      const dir = filePath.substring(0, filePath.lastIndexOf('/'));
+      return { owner: projectPath, repo: '', view, ref: dataRef, filePath, dir };
+    }
+
+    // Fallback: first segment as ref
+    const slashIdx = rest.indexOf('/');
+    if (slashIdx === -1) {
+      return { owner: projectPath, repo: '', view, ref: rest, filePath: '', dir: '' };
+    }
+    const ref = rest.substring(0, slashIdx);
+    const filePath = rest.substring(slashIdx + 1);
+    const dir = filePath.substring(0, filePath.lastIndexOf('/'));
+    return { owner: projectPath, repo: '', view, ref, filePath, dir };
+  }
+
+  return { esc, escHtml, findInTree, getApiBase, getRawBase, getGitLabApiBase, parseGitHubUrl, parseGitLabUrl, looksLikeXaml, tryFetch };
 })();
