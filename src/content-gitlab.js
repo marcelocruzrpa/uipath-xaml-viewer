@@ -1,5 +1,5 @@
 /**
- * UiPath XAML Visualizer — GitLab integration module.
+ * UiPath XAML Viewer — GitLab integration module.
  * Handles GitLab page detection, XAML fetching, button injection, and page observation.
  */
 (() => {
@@ -242,7 +242,7 @@
       });
     }
     if (window.UiPathDiff?.isDiffPage()) {
-      waitForElement('.diff-file .file-title-name, .diff-file .file-header-content, .diff-files-holder .file-holder').then(() => {
+      waitForElement('.diff-file .file-title-name, .diff-file .file-header-content, .diff-files-holder .file-holder, .rd-diff-file').then(() => {
         window.UiPathDiff.injectDiffButtons();
         window.UiPathDiff.injectDiffSummaries();
       });

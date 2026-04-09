@@ -1,4 +1,4 @@
-# Contributing to UiPath XAML Viewer for GitHub
+# Contributing to UiPath XAML Viewer
 
 Thanks for your interest in contributing! This guide covers how to report issues, suggest features, and submit pull requests.
 
@@ -7,7 +7,7 @@ Thanks for your interest in contributing! This guide covers how to report issues
 Open a [bug report](../../issues/new?template=bug_report.md) and include:
 
 - A clear description of the problem.
-- Steps to reproduce (a link to the `.xaml` file on GitHub is ideal).
+- Steps to reproduce (a link to the `.xaml` file on GitHub or GitLab is ideal).
 - Expected vs. actual behavior.
 - Browser name and version.
 
@@ -27,7 +27,7 @@ Open a [feature request](../../issues/new?template=feature_request.md) describin
 
 1. Fork the repo and create a branch from `main`.
 2. Keep changes focused — one fix or feature per PR.
-3. Test your changes on at least one `.xaml` file on GitHub (file view and diff view where applicable).
+3. Test your changes on at least one `.xaml` file on GitHub and/or GitLab (file view and diff view where applicable).
 4. Describe what you changed and why in the PR description.
 
 ## Code Style

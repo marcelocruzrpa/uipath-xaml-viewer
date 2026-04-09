@@ -1,14 +1,14 @@
-# UiPath XAML Viewer for GitHub
+# UiPath XAML Viewer
 
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/kompgmchmppekbnafaigolnjljbgcccm)](https://chromewebstore.google.com/detail/uipath-xaml-visualizer-fo/kompgmchmppekbnafaigolnjljbgcccm)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-A Chromium extension that renders UiPath workflow `.xaml` files as interactive diagrams directly on GitHub and GitHub Enterprise, with side-by-side visual diffs for commits, pull requests, and compare pages.
+A Chromium extension that renders UiPath workflow `.xaml` files as interactive diagrams directly on GitHub, GitLab, and their self-hosted variants, with side-by-side visual diffs for commits, pull requests, merge requests, and compare pages.
 
 ## Features
 
 ### Workflow Visualization
-- One-click or auto-visualization on GitHub blob and blame pages for `.xaml` files.
+- One-click or auto-visualization on GitHub and GitLab file pages for `.xaml` files.
 - Three view modes: **Diagram** (interactive SVG), **Outline** (collapsible tree), and **Flowchart** (Dagre graph layout).
 - Sequential workflow rendering with nested containers, connectors, collapse/expand, zoom, pan, and minimap.
 - Flowchart rendering with decision diamonds, FlowSwitch boxes, and labeled edges. FlowStep inner activities (nested Sequences, TryCatch, etc.) are fully traversable.
@@ -40,7 +40,7 @@ A Chromium extension that renders UiPath workflow `.xaml` files as interactive d
 - Print-friendly rendering with full SVG embedding.
 
 ### Appearance
-- Dark and light theme support, auto-detected from GitHub's color mode settings.
+- Dark and light theme support, auto-detected from the platform's color mode settings.
 - Manual theme override toggle in the toolbar.
 - Arguments, scoped variables, design mode badge, and activity count summary by category.
 - Auto-collapse for large workflows (>150 activities) to prevent rendering timeouts.
@@ -60,15 +60,18 @@ A Chromium extension that renders UiPath workflow `.xaml` files as interactive d
 | `b` | Bookmark selected activity |
 | `?` | Toggle shortcut help |
 
-### GitHub Enterprise Support
-- Auto-detects GitHub instances from the page hostname. Works on github.com and on user-configured GitHub Enterprise Server hosts after host permission is granted.
-- API URLs derived automatically (`/api/v3` for GHE, `api.github.com` for github.com).
+### Platform Support
+- Works on **GitHub.com**, **GitHub Enterprise Server**, **GitLab.com**, and **self-hosted GitLab** instances.
+- Auto-detects the platform from the page hostname. Custom hosts (GHE or self-hosted GitLab) are activated from the options page after granting the host permission.
+- API URLs derived automatically (`api.github.com` / `/api/v3` for GitHub; `/api/v4` for GitLab).
 - Dynamic content script registration per host via the service worker.
-- Per-host token storage: configure separate tokens for different GitHub instances.
+- Per-host token storage: configure separate tokens for each instance.
 
-### GitHub Token (Optional)
-- The extension uses the GitHub API to fetch file content for diffs and ref resolution. Without a token, public repositories are limited to 60 API requests per hour. Adding a token raises that limit to 5,000 requests per hour and enables access to private repositories.
-- Token is stored locally in the browser profile via extension storage and is not synced across devices.
+### Tokens (Optional)
+- The extension uses GitHub/GitLab APIs to fetch file content for diffs and ref resolution. Without a token, public repositories are subject to lower rate limits. Adding a token increases the limit and enables access to private repositories.
+- **GitHub**: tokens start with `ghp_` or `github_pat_`. Without a token: 60 req/hour; with a token: 5,000 req/hour.
+- **GitLab**: tokens start with `glpat-` and require the `read_api` scope.
+- Tokens are stored locally in the browser profile via extension storage and are not synced across devices.
 - Response caching (LRU, max 200 items) to minimize API calls.
 
 ## Installation
@@ -81,14 +84,15 @@ A Chromium extension that renders UiPath workflow `.xaml` files as interactive d
 2. Open `chrome://extensions/`.
 3. Enable **Developer mode**.
 4. Click **Load unpacked** and select the extension folder.
-5. Open a UiPath `.xaml` file on GitHub.
+5. Open a UiPath `.xaml` file on GitHub or GitLab.
 
 ## Token Setup
 
 1. Open the extension options page from the extensions screen.
-2. Select the GitHub instance hostname (defaults to `github.com`; enter your GHE hostname for enterprise).
-3. Paste a GitHub token with the minimum scope required for your repositories.
-4. Reload GitHub tabs after saving.
+2. Select the platform tab (**GitHub** or **GitLab**).
+3. Enter the instance hostname (defaults to `github.com` or `gitlab.com`; enter a custom hostname for enterprise/self-hosted instances).
+4. Paste a token with the minimum scope required for your repositories.
+5. Reload open tabs after saving.
 
 ## Project Structure
 
@@ -110,11 +114,12 @@ uipath-xaml-viewer/
 |-- scripts/
 |   `-- package.js
 |-- src/
-|   |-- background.js          # Service worker: GHE host registration
+|   |-- background.js          # Service worker: dynamic host registration
 |   |-- content.js             # Entry point orchestrator
 |   |-- content-export.js      # SVG/PNG export
-|   |-- content-fetch.js       # Authenticated GitHub API client with caching
+|   |-- content-fetch.js       # Authenticated API client with caching
 |   |-- content-github.js      # GitHub page detection, XAML fetching, button injection
+|   |-- content-gitlab.js      # GitLab page detection, XAML fetching, button injection
 |   |-- content-interactions.js # Pan/zoom, search, keyboard, inspector, bookmarks
 |   |-- content-search.js      # Search and filter utilities
 |   |-- content-state.js       # Shared state namespace (UXV)
@@ -127,6 +132,7 @@ uipath-xaml-viewer/
 |   |-- styles.css             # UI styling (dark/light themes)
 |   `-- utils.js               # Shared utilities
 `-- test/
+    |-- assets.test.js
     |-- content.test.js
     |-- diff.test.js
     |-- e2e.test.js

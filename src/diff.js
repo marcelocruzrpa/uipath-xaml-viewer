@@ -203,13 +203,22 @@ window.UiPathDiff = (() => {
     return null;
   }
 
+  function rdDiffFilePath(el) {
+    const link = el.querySelector('.rd-diff-file-link');
+    if (!link) return null;
+    // Prefer extracting the full path from the href (/-/blob/{sha}/{path})
+    const href = link.getAttribute('href') || '';
+    const match = href.match(/\/-\/blob\/[^/]+\/(.+)/);
+    return match ? decodeURIComponent(match[1]) : link.textContent.trim() || null;
+  }
+
   function findXamlDiffBlocks() {
     const blocks = [];
     const fileEls = document.querySelectorAll(
       // GitHub selectors
       '[data-tagsearch-path], .file, [data-file-type=".xaml"], copilot-diff-entry,'
-      // GitLab selectors
-      + '.diff-file, .diff-files-holder .file-holder'
+      // GitLab selectors (legacy + Rapid Diffs)
+      + '.diff-file, .diff-files-holder .file-holder, .rd-diff-file'
     );
 
     for (const el of fileEls) {
@@ -217,8 +226,9 @@ window.UiPathDiff = (() => {
         || el.querySelector('.file-header [title]')?.getAttribute('title')
         || el.querySelector('[data-path]')?.getAttribute('data-path')
         || el.querySelector('.file-info a')?.textContent?.trim()
-        // GitLab path selectors
+        // GitLab path selectors (legacy + Rapid Diffs)
         || el.querySelector('.file-title-name')?.textContent?.trim()
+        || rdDiffFilePath(el)
         || el.getAttribute('data-blob-diff-path')?.replace(/.*\//, '')
         || '';
 
@@ -511,27 +521,37 @@ window.UiPathDiff = (() => {
     if (!isDiffPage()) return;
 
     for (const { el, path, oldPath } of findXamlDiffBlocks()) {
-      const header = el.querySelector('.file-header, .js-file-header, [class*="fileHeader"], .file-header-content, .diff-file-header');
+      const header = el.querySelector('.file-header, .js-file-header, [class*="fileHeader"], .file-header-content, .diff-file-header, .rd-diff-file-header');
       if (!header) continue;
 
       const btn = document.createElement('button');
       btn.className = `${DIFF_BTN_CLASS} uxv-btn`;
-      btn.innerHTML = diffBtnIcon() + 'Visual Diff';
+      btn.textContent = '';
+      const btnIcon = document.createElement('span');
+      btnIcon.innerHTML = diffBtnIcon();
+      btn.appendChild(btnIcon.firstChild);
+      btn.appendChild(document.createTextNode(' Visual Diff'));
       btn.title = 'Show visual workflow diff';
       btn.dataset.path = path;
 
-      btn.addEventListener('click', async () => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        e.preventDefault();
         const existing = el.querySelector('.' + DIFF_VIEWER_CLASS);
         if (existing) {
           existing.remove();
           btn.classList.remove('uxv-btn-active');
-          btn.innerHTML = diffBtnIcon() + 'Visual Diff';
+          btn.textContent = '';
+          const icon = document.createElement('span');
+          icon.innerHTML = diffBtnIcon();
+          btn.appendChild(icon.firstChild);
+          btn.appendChild(document.createTextNode(' Visual Diff'));
           return;
         }
         await showDiff(el, btn, path, oldPath);
       });
 
-      const actions = header.querySelector('.file-actions, [class*="fileActions"], .BtnGroup, .diff-file-actions, .file-header-content .btn-group');
+      const actions = header.querySelector('.file-actions, [class*="fileActions"], .BtnGroup, .diff-file-actions, .file-header-content .btn-group, .rd-diff-file-info');
       if (actions) actions.prepend(btn);
       else header.appendChild(btn);
     }
@@ -808,7 +828,7 @@ window.UiPathDiff = (() => {
         }
       }
 
-      const diffTable = fileEl.querySelector('.js-file-content, [class*="fileContents"], .blob-wrapper, table.diff-table, .diff-content, .diff-viewer');
+      const diffTable = fileEl.querySelector('.js-file-content, [class*="fileContents"], .blob-wrapper, table.diff-table, .diff-content, .diff-viewer, .rd-diff-file-details');
       if (diffTable) diffTable.parentElement.insertBefore(viewer, diffTable.nextSibling);
       else fileEl.appendChild(viewer);
 
@@ -870,7 +890,7 @@ window.UiPathDiff = (() => {
       return;
     }
 
-    const header = el.querySelector('.file-header, [class*="fileHeader"], copilot-diff-entry, .file-header-content, .diff-file-header') || el;
+    const header = el.querySelector('.file-header, [class*="fileHeader"], copilot-diff-entry, .file-header-content, .diff-file-header, .rd-diff-file-header') || el;
     const loading = document.createElement('span');
     loading.className = 'uxv-diff-inline-summary uxv-diff-inline-loading';
     loading.textContent = '⋯';
@@ -933,7 +953,7 @@ window.UiPathDiff = (() => {
 
   function insertSummaryBadge(el, counts) {
     if (!counts || (counts.added === 0 && counts.modified === 0 && counts.removed === 0)) return;
-    const header = el.querySelector('.file-header, [class*="fileHeader"], copilot-diff-entry, .file-header-content, .diff-file-header');
+    const header = el.querySelector('.file-header, [class*="fileHeader"], copilot-diff-entry, .file-header-content, .diff-file-header, .rd-diff-file-header');
     const target = header || el;
     if (target.querySelector('.uxv-diff-inline-summary')) return;
     const badge = document.createElement('span');

@@ -1,8 +1,8 @@
 # Privacy Policy
 
-**UiPath XAML Viewer for GitHub** ("the Extension")
+**UiPath XAML Viewer** ("the Extension")
 
-Last updated: 2026-04-03
+Last updated: 2026-04-09
 
 ## Data Collection
 
@@ -10,12 +10,12 @@ The Extension does **not** collect, transmit, or store any personal data, browsi
 
 ## Local Processing
 
-To provide its user-facing features, the Extension processes the current GitHub.com or user-approved GitHub Enterprise Server page URL, repository context, and UiPath `.xaml` workflow content shown in the repository being viewed.
+To provide its user-facing features, the Extension processes the current page URL, repository context, and UiPath `.xaml` workflow content shown on GitHub.com, GitLab.com, or user-approved GitHub Enterprise Server and self-hosted GitLab instances.
 
 This processing happens locally in your browser to:
 
-- Detect supported GitHub file and compare pages
-- Fetch workflow file contents from GitHub or GitHub Enterprise Server
+- Detect supported file and compare pages on GitHub and GitLab
+- Fetch workflow file contents from the relevant platform API
 - Render diagrams, flowcharts, state machines, and visual diffs
 - Search within workflow activities and inspect workflow metadata
 
@@ -25,28 +25,35 @@ The Extension does not send this data to the developer or to any analytics, adve
 
 The Extension stores the following data locally in your browser profile using `chrome.storage.local`:
 
-- **GitHub Personal Access Tokens**: Optionally provided by the user to increase API rate limits and access private repositories. Tokens are stored per GitHub instance hostname and are sent only to the corresponding GitHub or GitHub Enterprise Server endpoints when authenticated requests are required.
+- **Personal Access Tokens**: Optionally provided by the user to increase API rate limits and access private repositories. GitHub and GitLab tokens are stored separately, per instance hostname, and are sent only to the corresponding platform endpoint when authenticated requests are required.
 - **Auto-visualize preference**: A boolean setting indicating whether to automatically open the visualizer on .xaml file pages.
-- **GitHub Enterprise host configuration**: Hostnames you explicitly register so the Extension can run on those GitHub Enterprise Server instances.
+- **Custom host configuration**: Hostnames you explicitly register so the Extension can run on GitHub Enterprise Server or self-hosted GitLab instances.
 
-No data is synced across devices or transmitted to any server other than the relevant GitHub or GitHub Enterprise Server page, raw-content, and API endpoints needed for the feature you use.
+No data is synced across devices or transmitted to any server other than the relevant GitHub or GitLab page, raw-content, and API endpoints needed for the feature you use.
 
-## GitHub API Usage
+## API Usage
 
-The Extension may make requests to the following GitHub-controlled endpoints for the repository you are viewing:
+The Extension may make requests to the following platform-controlled endpoints for the repository you are viewing:
 
+**GitHub:**
 - GitHub page URLs on `github.com`
 - Raw file URLs on `raw.githubusercontent.com`
-- GitHub REST API endpoints such as `api.github.com`
+- GitHub REST API v3 endpoints such as `api.github.com`
 - Equivalent GitHub Enterprise Server page, raw, and API endpoints for hosts you explicitly configure
 
-When the visual diff feature or private repository access is used, the Extension may send your optional GitHub token in the `Authorization` header to the relevant GitHub or GitHub Enterprise Server endpoint. Tokens are used only to authenticate those requests and are not sent anywhere else.
+**GitLab:**
+- GitLab page URLs on `gitlab.com`
+- GitLab REST API v4 endpoints such as `gitlab.com/api/v4`
+- Equivalent self-hosted GitLab page and API endpoints for hosts you explicitly configure
+
+When the visual diff feature or private repository access is used, the Extension may send your optional token in the request header to the relevant platform endpoint. Tokens are used only to authenticate those requests and are not sent anywhere else.
 
 ## Permissions
 
-- **`storage`**: Used to store GitHub tokens and preferences locally.
-- **Host permissions (`github.com`)**: Required to inject the visualization UI into GitHub pages and fetch raw XAML file contents.
-- **Optional host permissions (`https://*/*`)**: Requested only when you configure a GitHub Enterprise Server instance.
+- **`storage`**: Used to store tokens and preferences locally.
+- **`scripting`**: Used to dynamically register content scripts on custom GitHub Enterprise or self-hosted GitLab hosts.
+- **Host permissions (`github.com`, `raw.githubusercontent.com`, `gitlab.com`)**: Required to inject the visualization UI into GitHub and GitLab pages and fetch XAML file contents.
+- **Optional host permissions (`https://*/*`)**: Requested only when you configure a custom GitHub Enterprise Server or self-hosted GitLab instance.
 
 ## Third-Party Services
 

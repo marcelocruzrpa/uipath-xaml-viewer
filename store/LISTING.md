@@ -1,13 +1,13 @@
 # Chrome Web Store Listing
 
 ## Name
-UiPath XAML Viewer for GitHub
+UiPath XAML Viewer
 
 ## Summary (132 chars max)
-View UiPath XAML on GitHub as interactive diagrams, flowcharts, state machines, and side-by-side visual diffs.
+View UiPath XAML on GitHub & GitLab as interactive diagrams, flowcharts, state machines, and side-by-side visual diffs.
 
 ## Description
-UiPath XAML Viewer for GitHub helps developers, reviewers, and automation teams understand UiPath workflows without leaving GitHub. Open any `.xaml` file on GitHub.com or GitHub Enterprise and switch from raw XML to a navigable visual view built for code review.
+UiPath XAML Viewer helps developers, reviewers, and automation teams understand UiPath workflows without leaving GitHub or GitLab. Open any `.xaml` file on GitHub.com, GitLab.com, or their self-hosted variants and switch from raw XML to a navigable visual view built for code review.
 
 Highlights:
 - Visualize Sequence, Flowchart, and State Machine workflows
@@ -15,13 +15,13 @@ Highlights:
 - Search, zoom, pan, collapse containers, and use keyboard shortcuts
 - Inspect arguments, scoped variables, annotations, transitions, and activity properties
 - Open referenced workflows from `InvokeWorkflowFile` nodes and preview target arguments
-- Compare commits, pull requests, and branch changes with side-by-side visual workflow diffs
+- Compare commits, pull requests, merge requests, and branch changes with side-by-side visual workflow diffs
 - Export diagrams as SVG, PNG, or print-friendly output
-- Supports Classic and Modern UiPath projects, dark mode, and GitHub Enterprise Server
+- Supports Classic and Modern UiPath projects, dark mode, GitHub Enterprise Server, and self-hosted GitLab
 
 Privacy:
 - No analytics, tracking, or data collection
-- Optional GitHub tokens are stored in `chrome.storage.local` and only sent to the corresponding GitHub or GitHub Enterprise endpoint when needed
+- Optional tokens are stored in `chrome.storage.local` and only sent to the corresponding platform endpoint when needed
 
 ## Category
 Developer Tools
