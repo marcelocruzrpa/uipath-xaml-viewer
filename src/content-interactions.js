@@ -284,7 +284,7 @@
       setBreadcrumbs(crumbs);
 
       const resolvedPath = resolveWorkflowPath(workflowFile, ctx.dir);
-      const target = (UXV.platform.buildFileUrl?.(ctx, resolvedPath) || `/${ctx.owner}/${ctx.repo}/blob/${ctx.ref}/${resolvedPath}`) + '#uxv-auto';
+      const target = UXV.platform.buildFileUrl(ctx, resolvedPath) + '#uxv-auto';
       window.open(target, '_blank');
     });
   }
@@ -335,7 +335,7 @@
       if (!ctx) return;
       const dir = ctx.filePath.split('/').slice(0, -1).join('/');
       const resolved = resolveWorkflowPath(workflowFile, dir);
-      const cacheKey = `${ctx.owner}/${ctx.repo}/${ctx.ref}/${resolved}`;
+      const cacheKey = `${ctx.owner}${ctx.repo ? '/' + ctx.repo : ''}/${ctx.ref}/${resolved}`;
 
       const cached = getInvokeCache(cacheKey);
       if (cached !== null) {

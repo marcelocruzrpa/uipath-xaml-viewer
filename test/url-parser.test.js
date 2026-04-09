@@ -1,5 +1,5 @@
 /**
- * Tests for the shared parseGitHubUrl, getApiBase, and getRawBase utilities.
+ * Tests for the shared URL parsing and utility functions (GitHub and GitLab).
  */
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
@@ -266,6 +266,8 @@ describe('getGitLabApiBase', () => {
 /* ------------------------------------------------------------------ */
 
 describe('parseGitLabUrl', () => {
+  let origPathname;
+
   function setPathname(path) {
     Object.defineProperty(window, 'location', {
       value: { ...window.location, pathname: path, hostname: 'gitlab.com' },
@@ -273,6 +275,22 @@ describe('parseGitLabUrl', () => {
       configurable: true,
     });
   }
+
+  beforeEach(() => {
+    origPathname = window.location.pathname;
+    document.body.textContent = '';
+  });
+
+  afterEach(() => {
+    try {
+      Object.defineProperty(window, 'location', {
+        value: { ...window.location, pathname: origPathname },
+        writable: true,
+        configurable: true,
+      });
+    } catch (e) { /* ok */ }
+    document.body.textContent = '';
+  });
 
   it('returns null for non-blob GitLab URLs', () => {
     setPathname('/group/project');
@@ -338,7 +356,12 @@ describe('parseGitLabUrl', () => {
     const ctx = parseGitLabUrl();
     expect(ctx.ref).toBe('feature/my-branch');
     expect(ctx.filePath).toBe('src/Main.xaml');
+  });
 
-    document.body.removeChild(el);
+  it('falls back to first segment as ref when no data-ref is present', () => {
+    setPathname('/group/project/-/blob/feature/branch/file.xaml');
+    const ctx = parseGitLabUrl();
+    expect(ctx.ref).toBe('feature');
+    expect(ctx.filePath).toBe('branch/file.xaml');
   });
 });

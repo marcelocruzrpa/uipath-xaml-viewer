@@ -10,7 +10,7 @@
 
   function isGitLabPage() {
     return document.querySelector('meta[content="GitLab"]')
-      || document.querySelector('body[data-page]')
+      || document.querySelector('body[data-page^="projects:"]')
       || document.querySelector('.navbar-gitlab, .gl-navbar')
       || location.hostname === 'gitlab.com';
   }

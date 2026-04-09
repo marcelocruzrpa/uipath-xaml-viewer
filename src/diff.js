@@ -122,7 +122,11 @@ window.UiPathDiff = (() => {
   function getOwnerRepo() {
     // GitLab: everything before /-/ is the project path
     const glMatch = location.pathname.match(/^\/(.+?)\/-\//);
-    if (glMatch && isGitLabContext()) {
+    if (glMatch) {
+      if (!isGitLabContext()) {
+        console.warn('[UXV] URL contains /-/ (GitLab pattern) but GitLab context not detected');
+        return null;
+      }
       return { owner: glMatch[1], repo: '', projectPath: glMatch[1], isGitLab: true };
     }
     // GitHub
@@ -141,6 +145,7 @@ window.UiPathDiff = (() => {
     const encoded = encodeURIComponent(projectPath);
     const data = await gitlabApiGet(`${gitlabApiBase()}/projects/${encoded}/merge_requests/${mrIid}`);
     if (!data) throw new Error(`MR !${mrIid} not found`);
+    if (!data.diff_refs) throw new Error(`MR !${mrIid} diff refs not available (source branch may have been deleted).`);
     return {
       base: data.diff_refs.base_sha,
       head: data.diff_refs.head_sha,
@@ -168,7 +173,7 @@ window.UiPathDiff = (() => {
         return { ...ownerRepo, base: refs.base, head: refs.head };
       }
 
-      const glCompareMatch = path.match(/\/-\/compare\/(.+?)\.{2,3}(.+)/);
+      const glCompareMatch = path.match(/\/-\/compare\/(.+?)\.{2,3}([^?#]+)/);
       if (glCompareMatch) {
         return { ...ownerRepo, base: glCompareMatch[1], head: glCompareMatch[2] };
       }

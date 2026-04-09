@@ -343,10 +343,18 @@ if (addGlHostBtn) {
   });
 }
 
+function validateGitLabToken(token) {
+  return token.startsWith('glpat-');
+}
+
 document.getElementById('gl-save').addEventListener('click', () => {
   const token = glTokenInput.value.trim();
   if (!token) {
     showGlStatus('Token is empty.', 'error');
+    return;
+  }
+  if (!validateGitLabToken(token)) {
+    showGlStatus('Token should look like a GitLab personal access token (e.g. glpat-...).', 'error');
     return;
   }
   const host = glHostInput.value.trim() || 'gitlab.com';

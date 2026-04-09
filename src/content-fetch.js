@@ -145,6 +145,12 @@ window.UiPathFetch = (() => {
     const response = await fetch(url, { headers, signal: controller.signal });
     clearTimeout(timeoutId);
 
+    if (response.status === 429) {
+      const retryAfter = response.headers.get('Retry-After');
+      const secs = retryAfter ? parseInt(retryAfter, 10) : '?';
+      throw new Error(`GitLab API rate limit exceeded. Retry after ~${secs}s. Configure a token in extension options to raise the limit.`);
+    }
+
     if (!response.ok) {
       if (response.status === 404) {
         cacheSet(url, null);
